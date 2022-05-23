@@ -280,6 +280,8 @@ class GPLGenC:
                     self.__data_d['copyright_d']['years'] = (
                         int(config_d['years'])
                     )
+                elif config_d['years'].isdigit():
+                    pass
                 else:
                     self.__data_d['copyright_d']['years'] = config_d['years']
 
