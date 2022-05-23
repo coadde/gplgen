@@ -1,4 +1,5 @@
 #!/bin/sh
+# POSIX Shell
 
 # A GIMP palette generator
 # Copyright (C) 2022 Márcio Silva <coadde@hyperbola.info>
