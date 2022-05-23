@@ -306,6 +306,7 @@ class GPLGenC {
                     $this->data_a['copyright_a']['years'] = (
                         intval($config_a['years'])
                     );
+                elseif (is_numeric($config_a['years']));
                 else
                     $this->data_a['copyright_a']['years'] = $config_a['years'];
 
