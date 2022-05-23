@@ -1,4 +1,4 @@
-/* C */
+/* C17 - ISO/IEC 9899:2018 standard revision */
 
 /*
  * A GIMP palette generator
