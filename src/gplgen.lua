@@ -305,10 +305,12 @@ function GPLGenC:new_f(input, output)
             if config_t['years'] then
                 if tonumber(config_t['years'])
                       and tonumber(config_t['years']) >= 1000
-                      and tonumber(config_t['years']) < os.date('%Y') then
+                      and tonumber(config_t['years'])
+                        < tonumber(os.date('%Y')) then
                     self.data_t['copyright_t']['years'] = (
                         tonumber(config_t['years'], 10)
                     )
+                elseif tonumber(config_t['years']) then
                 else
                     self.data_t['copyright_t']['years'] = config_t['years']
                 end
