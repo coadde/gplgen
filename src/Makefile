@@ -11,13 +11,23 @@
 # <https://creativecommons.org/publicdomain/zero/1.0/>.
 #
 
-all: _PHONY
-	${MAKE} -C src
+BINDIR = usr/local/bin
+CFLAGS = -std=c17
+EXEC = gplgen
 
-install: _PHONY
-	${MAKE} -C src install
+all: $(EXEC)_c
+
+$(EXEC)_c: $(EXEC).c
+	$(CC) $(CFLAGS) -o $@ $<
+
+install: $(EXEC)_c $(EXEC).py $(EXEC).php $(EXEC).lua $(EXEC).sh
+	for i in $?; do \
+            export j=$$(printf '%s\n' $$i | sed 's/[.]/_/'); \
+	    install -Dm 0755 $$i $(DESTDIR)/$(BINDIR)/$$j; \
+	done
+	unset i j
 
 cleanall: _PHONY
-	${MAKE} -C src cleanall
+	$(RM) $(EXEC)_c
 
 _PHONY:
