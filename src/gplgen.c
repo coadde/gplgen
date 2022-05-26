@@ -420,11 +420,11 @@ GPLGenC(int argc, char *arg_gap[])
             NULL
         };
 
-        if (tmp_s.type_gp == "g"
-              || tmp_s.type_gp == "gr"
-              || tmp_s.type_gp == "gry"
-              || tmp_s.type_gp == "gray"
-              || tmp_s.type_gp == "grey") {
+        if (strcmp(tmp_s.type_gp, "g") == 0
+              || strcmp(tmp_s.type_gp, "gr") == 0
+              || strcmp(tmp_s.type_gp, "gry") == 0
+              || strcmp(tmp_s.type_gp, "gray") == 0
+              || strcmp(tmp_s.type_gp, "grey") == 0) {
             /*
              * Default channel values.
              * 0 == '\0' == NULL
@@ -713,7 +713,7 @@ GPLGenC(int argc, char *arg_gap[])
     }
 
     void
-    finput_f(struct GPLGenC *self, FILE *input_fp) {
+    finput_f(struct GPLGenC *self, FILE *input_lp) {
         struct {
             char character;
             unsigned char keyl: 3;
@@ -727,11 +727,11 @@ GPLGenC(int argc, char *arg_gap[])
         } buffer_s;
         memset(&buffer_s, '\0', sizeof(buffer_s));
 
-        while (! feof(input_fp)) {
+        while (! feof(input_lp)) {
             if (! buffer_s.type) {
                 if (buffer_s.keyl < 7) {
                     if (! buffer_s.ignore) {
-                        buffer_s.key_g[buffer_s.keyl] = fgetc(input_fp);
+                        buffer_s.key_g[buffer_s.keyl] = fgetc(input_lp);
 
                         switch (buffer_s.key_g[buffer_s.keyl]) {
                             case ' ':
@@ -757,7 +757,7 @@ GPLGenC(int argc, char *arg_gap[])
                                 buffer_s.keyl = ++buffer_s.keyl;
                         }
                     } else {
-                        buffer_s.character = fgetc(input_fp);
+                        buffer_s.character = fgetc(input_lp);
 
                         switch (buffer_s.character) {
                             case '\r':
@@ -770,12 +770,12 @@ GPLGenC(int argc, char *arg_gap[])
                 } else {
                     buffer_s.key_g[buffer_s.keyl] = '\0';
 
-                    if (strcmp(buffer_s.key_g, "type")
-                          || strcmp(buffer_s.key_g, "depth")
-                          || strcmp(buffer_s.key_g, "columns")
-                          || strcmp(buffer_s.key_g, "title")
-                          || strcmp(buffer_s.key_g, "author")
-                          || strcmp(buffer_s.key_g, "years")) {
+                    if (strcmp(buffer_s.key_g, "type") == 0
+                          || strcmp(buffer_s.key_g, "depth") == 0
+                          || strcmp(buffer_s.key_g, "columns") == 0
+                          || strcmp(buffer_s.key_g, "title") == 0
+                          || strcmp(buffer_s.key_g, "author") == 0
+                          || strcmp(buffer_s.key_g, "years") == 0) {
                         /* Set as value type. */
                         buffer_s.type = TRUE;
                     } else {
@@ -787,7 +787,7 @@ GPLGenC(int argc, char *arg_gap[])
             } else {
                 if (buffer_s.valuel < (1 << 8)-1) {
                     if (! buffer_s.ignore) {
-                        buffer_s.value_g[buffer_s.valuel] = fgetc(input_fp);
+                        buffer_s.value_g[buffer_s.valuel] = fgetc(input_lp);
 
                         switch(buffer_s.value_g[buffer_s.valuel]) {
                             case '=':
@@ -830,22 +830,28 @@ GPLGenC(int argc, char *arg_gap[])
 
                         if (strcmp(buffer_s.key_g, "type") == 0) {
                             strcpy(self->input_s.type_g, buffer_s.value_g);
-                            self->input_s.typel = buffer_s.valuel;
+                            //self->input_s.typel = buffer_s.valuel;
+                            self->input_s.typel = strlen(buffer_s.value_g) + 1;
                         } else if (strcmp(buffer_s.key_g, "depth") == 0) {
                             strcpy(self->input_s.depth_g, buffer_s.value_g);
-                            self->input_s.depthl = buffer_s.valuel;
+                            //self->input_s.depthl = buffer_s.valuel;
+                            self->input_s.depthl = strlen(buffer_s.value_g) + 1;
                         } else if (strcmp(buffer_s.key_g, "columns") == 0) {
                             strcpy(self->input_s.columns_g, buffer_s.value_g);
-                            self->input_s.columnsl = buffer_s.valuel;
+                            //self->input_s.columnsl = buffer_s.valuel;
+                            self->input_s.columnsl = strlen(buffer_s.value_g) + 1;
                         } else if (strcmp(buffer_s.key_g, "title") == 0) {
                             strcpy(self->input_s.title_g, buffer_s.value_g);
-                            self->input_s.titlel = buffer_s.valuel;
+                            //self->input_s.titlel = buffer_s.valuel;
+                            self->input_s.titlel = strlen(buffer_s.value_g) + 1;
                         } else if (strcmp(buffer_s.key_g, "author") == 0) {
                             strcpy(self->input_s.author_g, buffer_s.value_g);
-                            self->input_s.authorl = buffer_s.valuel;
+                            //self->input_s.authorl = buffer_s.valuel;
+                            self->input_s.authorl = strlen(buffer_s.value_g) + 1;
                         } else if (strcmp(buffer_s.key_g, "years") == 0) {
                             strcpy(self->input_s.years_g, buffer_s.value_g);
-                            self->input_s.yearsl = buffer_s.valuel;
+                            //self->input_s.yearsl = buffer_s.valuel;
+                            self->input_s.yearsl = strlen(buffer_s.value_g) + 1;
                         }
 
                         memset(
@@ -863,7 +869,7 @@ GPLGenC(int argc, char *arg_gap[])
                         /* Set as key type. */
                         buffer_s.type = FALSE;
                     } else {
-                        buffer_s.character = fgetc(input_fp);
+                        buffer_s.character = fgetc(input_lp);
 
                         switch(buffer_s.character) {
                             case '\r':
@@ -900,7 +906,7 @@ GPLGenC(int argc, char *arg_gap[])
             struct tm *tm_sp;
             char *input_gp;
             char *output_gp;
-            FILE *file_fp;
+            FILE *file_lp;
             struct Input *config_sp;
             char *cpal_gp;
             unsigned char isdigit: 1;
@@ -1003,36 +1009,37 @@ GPLGenC(int argc, char *arg_gap[])
             tmp_s.input_gp = arg_gap[1];
 
         if (tmp_s.input_gp) {
-            tmp_s.file_fp = fopen(tmp_s.input_gp, "r");
+            tmp_s.file_lp = fopen(tmp_s.input_gp, "r");
 
-            if (tmp_s.file_fp) {
-                self->finput_mp(self, tmp_s.file_fp);
+            if (tmp_s.file_lp) {
+                self->finput_mp(self, tmp_s.file_lp);
                 tmp_s.config_sp = &self->input_s;
-                fclose(tmp_s.file_fp);
+                fclose(tmp_s.file_lp);
             } else {
                 self->error_s.code = errno;
                 self->error_s.valuel = strlen(tmp_s.input_gp) + 1;
                 self->error_s.value_gp = tmp_s.input_gp;
             }
-            tmp_s.file_fp = NULL;
+            tmp_s.file_lp = NULL;
         }
         tmp_s.input_gp = NULL;
 
         if (tmp_s.config_sp) {
-            printf("TYPE_DEFAULT = %s\n", self->data_s.colour_s.type_gp);
-            if (tmp_s.config_sp->type_g != 0)
+            if (tmp_s.config_sp->type_g) {
                 strcpy(
                     self->data_s.colour_s.type_gp,
                     tmp_s.config_sp->type_g
                 );
 
-            printf("TYPE_CONFIG = %s\n", tmp_s.config_sp->type_g);
+                memset(
+                    tmp_s.config_sp->type_g,
+                    '\0',
+                    sizeof(char) * tmp_s.config_sp->typel
+                );
+                tmp_s.config_sp->typel = 0;
+            }
 
-            printf("DEPTH_DEFAULT = ");
-            printf("%hhu ", self->data_s.colour_s.depth_a[0]);
-            printf("%hhu ", self->data_s.colour_s.depth_a[1]);
-            printf("%hhu\n", self->data_s.colour_s.depth_a[2]);
-            if (tmp_s.config_sp->depth_g != 0) {
+            if (tmp_s.config_sp->depth_g) {
                 struct {
                     char *data_ap;
                     unsigned char lenght: 3;
@@ -1040,86 +1047,132 @@ GPLGenC(int argc, char *arg_gap[])
                     malloc(sizeof(char)),
                     1
                 };
-                depth_s.data_ap[0] = 8;
-/*
-                for (unsigned char index = 0; index < 5; index++) {
-                    if ((index == 0 || index == 2 || index == 4)
-                          && isdigit(tmp_s.config_sp->depth_g)) {
-                        depth_s.lenght = (index / 2);
-                        printf("TL=%hhu, DL=%hhu ", index, depth_s.lenght);
+                depth_s.data_ap[depth_s.lenght - 1] = (
+                    self->data_s.colour_s.depth_a[depth_s.lenght - 1]
+                );
 
-                        depth_s.data_ap[depth_s.lenght] = (
-                            strtoul(&tmp_s.config_sp->depth_g[index], NULL, 10)
+                for (unsigned char index = 0;
+                      index < tmp_s.config_sp->depthl;
+                      index++) {
+                    if ((index == 0
+                          || index == 2
+                          || index == tmp_s.config_sp->depthl - 2)
+                          && isdigit(tmp_s.config_sp->depth_g[index])) {
+                        depth_s.lenght = index/2 + 1;
+
+                        depth_s.data_ap[depth_s.lenght - 1] = (
+                            strtoul(
+                                &tmp_s.config_sp->depth_g[index],
+                                NULL,
+                                10
+                            )
                         );
-                        printf("VAL=%hhu\n", depth_s.data_ap[depth_s.lenght]);
 
-                        if (index < 4)
-                            printf("UPDATE_INDEX\n");
+                        if (index < tmp_s.config_sp->depthl - 2) {
                             depth_s.data_ap = (
-                                malloc(sizeof(char) * (depth_s.lenght + 1))
+                                realloc(
+                                    depth_s.data_ap,
+                                    sizeof(char) * depth_s.lenght + 1
+                                )
                             );
+                            depth_s.data_ap[depth_s.lenght] = (
+                                self->data_s.colour_s.depth_a[depth_s.lenght]
+                            );
+                        }
                     }
 
                     if ((index == 1 || index == 3)
                           && tmp_s.config_sp->depth_g[index] != ' ') {
-                        printf("DEPTH_FORMAT_IS_CORRUPT\n");
                         break;
                     }
                 }
 
-                memcpy(self->data_s.colour_s.depth_a, depth_s.data_ap, 3);
+                memcpy(self->data_s.colour_s.depth_a, depth_s.data_ap, depth_s.lenght);
+
                 memset(depth_s.data_ap, 0, sizeof(char) * depth_s.lenght);
                 free(depth_s.data_ap);
                 memset(&depth_s, 0, sizeof(depth_s));
-*/            }
-            printf("DEPTH_CONFIG = %s\n", tmp_s.config_sp->depth_g);
 
-            printf("TITLE_DEFAULT = %s\n", self->data_s.pmap_s.title_gp);
-/*            if (tmp_s.config_sp->title_g != 0)
+                memset(
+                    tmp_s.config_sp->depth_g,
+                    '\0',
+                    sizeof(char) * tmp_s.config_sp->depthl
+                );
+                tmp_s.config_sp->depthl = 0;
+            }
+
+            if (tmp_s.config_sp->title_g) {
                 strcpy(
                     self->data_s.pmap_s.title_gp,
                     tmp_s.config_sp->title_g
                 );
-*/
-            printf("TITLE_CONFIG = %s\n", tmp_s.config_sp->title_g);
 
-            printf("COLUMNS_DEFAULT = %hhu\n", self->data_s.pmap_s.columns);
-/*            if (tmp_s.config_sp->columns_g
-                  && isdigit(tmp_s.config_sp->columns_g)
-                  && int(tmp_s.config_sp->columns_g) >= 0)
-                self->data_s.pmap_s.columns = (
-                    strtoul(
-                        tmp_s.config_sp->columns_g,
-                        NULL,
-                        10
-                    )
+                memset(
+                    tmp_s.config_sp->title_g,
+                    '\0',
+                    sizeof(char) * tmp_s.config_sp->titlel
                 );
-*/
-            printf("COLUMNS_CONFIG = %s\n", tmp_s.config_sp->columns_g);
+                tmp_s.config_sp->titlel = 0;
+            }
 
-            printf("AUTHOR_DEFAULT = %s\n", self->data_s.copyright_s.author_gp);
-/*            if (tmp_s.config_sp->author_g != 0)
+            if (tmp_s.config_sp->columns_g) {
+                for (unsigned char index = 0;
+                      index < tmp_s.config_sp->columnsl - 1;
+                      index++)
+                    if (! isdigit(tmp_s.config_sp->columns_g[index]))
+                        break;
+                    else if (index + 1 == tmp_s.config_sp->columnsl - 1)
+                        tmp_s.isdigit = TRUE;
+
+                if (tmp_s.isdigit
+                      && strtoul(tmp_s.config_sp->columns_g, NULL, 10) >= 0)
+                    self->data_s.pmap_s.columns = (
+                        strtoul(tmp_s.config_sp->columns_g, NULL, 10)
+                    );
+
+                memset(
+                    tmp_s.config_sp->columns_g,
+                    '\0',
+                    sizeof(char) * tmp_s.config_sp->columnsl
+                );
+                tmp_s.config_sp->columnsl = 0;
+                tmp_s.isdigit = FALSE;
+            }
+
+            if (tmp_s.config_sp->author_g) {
+                /*
+                 * Error in test/input0: malloc(): invalid size (unsorted).
+                 * Error in test/input1: works, but eat the last '\n' in header string.
+                 */
+                /*
                 strcpy(
                     self->data_s.copyright_s.author_gp,
                     tmp_s.config_sp->author_g
                 );
-*/
-            printf("AUTHOR_CONFIG = %s\n", tmp_s.config_sp->author_g);
+                */
 
-            printf("YEARS_DEFAULT = %s\n", self->data_s.copyright_s.years_gp);
+                memset(
+                    tmp_s.config_sp->author_g,
+                    '\0',
+                    sizeof(char) * tmp_s.config_sp->authorl
+                );
+                tmp_s.config_sp->authorl = 0;
+            }
+
             if (tmp_s.config_sp->years_g) {
-/*                for (unsigned char index = 0;
-                      index < tmp_s.config_sp->yearsl;
+                for (unsigned char index = 0;
+                      index < tmp_s.config_sp->yearsl - 1;
                       index++)
                     if (! isdigit(tmp_s.config_sp->years_g[index]))
                         break;
-                    else if (index == tmp_s.config_sp->yearsl-1)
+                    else if (index + 1 == tmp_s.config_sp->yearsl - 1)
                         tmp_s.isdigit = TRUE;
 
-
-                printf("%s\n", "YEARS0");
-                printf("%s\n", tmp_s.config_sp->years_g);
-                printf("%s\n", self->data_s.copyright_s.years_gp);
+                /*
+                 * Error in test/input0: works, but eat the last '\n' in header string.
+                 * OK in test/input1.
+                 */
+                /*
                 if (tmp_s.isdigit
                       && strtoul(tmp_s.config_sp->years_g, NULL, 10) > 999
                       && strtoul(tmp_s.config_sp->years_g, NULL, 10)
@@ -1129,10 +1182,14 @@ GPLGenC(int argc, char *arg_gap[])
                         self->data_s.copyright_s.years_gp,
                         tmp_s.config_sp->years_g
                     );
+                else if (tmp_s.isdigit);
+                else
+                    strcpy(
+                        self->data_s.copyright_s.years_gp,
+                        tmp_s.config_sp->years_g
+                    );
+                */
 
-                printf("%s\n", "YEARS1");
-                printf("%s\n", tmp_s.config_sp->years_g);
-                printf("%s\n", self->data_s.copyright_s.years_gp);
                 memset(
                     tmp_s.config_sp->years_g,
                     '\0',
@@ -1140,8 +1197,7 @@ GPLGenC(int argc, char *arg_gap[])
                 );
                 tmp_s.config_sp->yearsl = 0;
                 tmp_s.isdigit = FALSE;
-*/            }
-            printf("YEARS_CONFIG = %s\n", tmp_s.config_sp->years_g);
+            }
         }
 
         tmp_s.cpal_gp = self->cpal_lgen_mp(self);
@@ -1149,28 +1205,28 @@ GPLGenC(int argc, char *arg_gap[])
             tmp_s.output_gp = arg_gap[2];
 
         if (tmp_s.output_gp) {
-            tmp_s.file_fp = fopen(tmp_s.output_gp, "w");
-            if (tmp_s.file_fp) {
+            tmp_s.file_lp = fopen(tmp_s.output_gp, "w");
+            if (tmp_s.file_lp) {
                 fwrite(
                     tmp_s.cpal_gp,
                     sizeof(char),
                     self->buffer_s.cpall,
-                    tmp_s.file_fp
+                    tmp_s.file_lp
                 );
-                fclose(tmp_s.file_fp);
+                fclose(tmp_s.file_lp);
             } else {
                 self->error_s.code = errno;
                 self->error_s.valuel = strlen(tmp_s.output_gp) + 1;
                 self->error_s.value_gp = tmp_s.output_gp;
                 printf("%s\n", tmp_s.cpal_gp);
             }
-            tmp_s.file_fp = NULL;
+            tmp_s.file_lp = NULL;
         } else {
             printf("%s\n", tmp_s.cpal_gp);
         }
         tmp_s.output_gp = NULL;
 
-        if (self->error_s.code != 0) {
+        if (self->error_s.code) {
             struct {
                 char code;
                 unsigned char valuel;
