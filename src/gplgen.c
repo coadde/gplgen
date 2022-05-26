@@ -1026,6 +1026,20 @@ GPLGenC(int argc, char *arg_gap[])
 
         if (tmp_s.config_sp) {
             if (tmp_s.config_sp->type_g) {
+                memset(
+                    self->data_s.colour_s.type_gp,
+                    '\0',
+                    sizeof(char) * self->data_s.colour_s.typel
+                );
+                self->data_s.colour_s.typel = tmp_s.config_sp->typel;
+
+                self->data_s.colour_s.type_gp = (
+                    realloc(
+                        self->data_s.colour_s.type_gp,
+                        sizeof(char) * self->data_s.colour_s.typel
+                    )
+                );
+
                 strcpy(
                     self->data_s.colour_s.type_gp,
                     tmp_s.config_sp->type_g
@@ -1102,6 +1116,20 @@ GPLGenC(int argc, char *arg_gap[])
             }
 
             if (tmp_s.config_sp->title_g) {
+                memset(
+                    self->data_s.pmap_s.title_gp,
+                    '\0',
+                    sizeof(char) * self->data_s.pmap_s.titlel
+                );
+                self->data_s.pmap_s.titlel = tmp_s.config_sp->titlel;
+
+                self->data_s.pmap_s.title_gp = (
+                    realloc(
+                        self->data_s.pmap_s.title_gp,
+                        sizeof(char) * self->data_s.pmap_s.titlel
+                    )
+                );
+
                 strcpy(
                     self->data_s.pmap_s.title_gp,
                     tmp_s.config_sp->title_g
@@ -1140,16 +1168,24 @@ GPLGenC(int argc, char *arg_gap[])
             }
 
             if (tmp_s.config_sp->author_g) {
-                /*
-                 * Error in test/input0: malloc(): invalid size (unsorted).
-                 * Error in test/input1: works, but eat the last '\n' in header string.
-                 */
-                /*
+                memset(
+                    self->data_s.copyright_s.author_gp,
+                    '\0',
+                    sizeof(char) * self->data_s.copyright_s.authorl
+                );
+                self->data_s.copyright_s.authorl = tmp_s.config_sp->authorl;
+
+                self->data_s.copyright_s.author_gp = (
+                    realloc(
+                        self->data_s.copyright_s.author_gp,
+                        sizeof(char) * self->data_s.copyright_s.authorl
+                    )
+                );
+
                 strcpy(
                     self->data_s.copyright_s.author_gp,
                     tmp_s.config_sp->author_g
                 );
-                */
 
                 memset(
                     tmp_s.config_sp->author_g,
@@ -1168,27 +1204,50 @@ GPLGenC(int argc, char *arg_gap[])
                     else if (index + 1 == tmp_s.config_sp->yearsl - 1)
                         tmp_s.isdigit = TRUE;
 
-                /*
-                 * Error in test/input0: works, but eat the last '\n' in header string.
-                 * OK in test/input1.
-                 */
-                /*
                 if (tmp_s.isdigit
                       && strtoul(tmp_s.config_sp->years_g, NULL, 10) > 999
                       && strtoul(tmp_s.config_sp->years_g, NULL, 10)
                         < strtoul(tmp_s.years_g, NULL, 10)
-                      || ! tmp_s.isdigit)
+                      || ! tmp_s.isdigit) {
+                    memset(
+                        self->data_s.copyright_s.years_gp,
+                        '\0',
+                        sizeof(char) * self->data_s.copyright_s.yearsl
+                    );
+                    self->data_s.copyright_s.yearsl = tmp_s.config_sp->yearsl;
+
+                    self->data_s.copyright_s.years_gp = (
+                        realloc(
+                            self->data_s.copyright_s.years_gp,
+                            sizeof(char) * self->data_s.copyright_s.yearsl
+                        )
+                    );
+
                     strcpy(
                         self->data_s.copyright_s.years_gp,
                         tmp_s.config_sp->years_g
                     );
-                else if (tmp_s.isdigit);
-                else
+                } else if (tmp_s.isdigit);
+                else {
+                    memset(
+                        self->data_s.copyright_s.years_gp,
+                        '\0',
+                        sizeof(char) * self->data_s.copyright_s.yearsl
+                    );
+                    self->data_s.copyright_s.yearsl = tmp_s.config_sp->yearsl;
+
+                    self->data_s.copyright_s.years_gp = (
+                        realloc(
+                            self->data_s.copyright_s.years_gp,
+                            sizeof(char) * self->data_s.copyright_s.yearsl
+                        )
+                    );
+
                     strcpy(
                         self->data_s.copyright_s.years_gp,
                         tmp_s.config_sp->years_g
                     );
-                */
+                }
 
                 memset(
                     tmp_s.config_sp->years_g,
