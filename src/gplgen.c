@@ -113,7 +113,7 @@ GPLGenC(int argc, char *arg_gap[])
     };
 
     unsigned char *
-    bchn_lgen_f(struct Self *self_s, unsigned char byte) {
+    bchn_lgen_f(struct Self *self_sp, unsigned char byte) {
         if (byte<1 || byte>8)
             byte = 8;
 
@@ -191,13 +191,13 @@ GPLGenC(int argc, char *arg_gap[])
         }
 
         /* Save the lenght and return the channel array. */
-        self_s->buffer_s.bchn_lmin1 = quantity;
+        self_sp->buffer_s.bchn_lmin1 = quantity;
         byte, quantity = 0, 0;
         return channel_ap;
     }
 
     char *
-    header_lgen_f(struct Self *self) {
+    header_lgen_f(struct Self *self_sp) {
         /* Default values. */
         struct {
             unsigned char authorl;
@@ -210,15 +210,15 @@ GPLGenC(int argc, char *arg_gap[])
             unsigned char yearsl;
             char *years_gp;
         } tmp_s = {
-            self_s->data_s.copyright_s.authorl,
-            self_s->data_s.copyright_s.author_gp,
-            self_s->data_s.pmap_s.columns,
+            self_sp->data_s.copyright_s.authorl,
+            self_sp->data_s.copyright_s.author_gp,
+            self_sp->data_s.pmap_s.columns,
             0,
             NULL,
-            self_s->data_s.pmap_s.titlel,
-            self_s->data_s.pmap_s.title_gp,
-            self_s->data_s.copyright_s.yearsl,
-            self_s->data_s.copyright_s.years_gp
+            self_sp->data_s.pmap_s.titlel,
+            self_sp->data_s.pmap_s.title_gp,
+            self_sp->data_s.copyright_s.yearsl,
+            self_sp->data_s.copyright_s.years_gp
         };
 
         /* Set columns values. */
@@ -255,7 +255,7 @@ GPLGenC(int argc, char *arg_gap[])
             char newline_g[2];
             char n_sing_g[2];
             unsigned short lenght: 11;
-        } str_s = {
+        } stg_s = {
             "GIMP Palette",
             "Name: ",
             "Columns: ",
@@ -277,134 +277,134 @@ GPLGenC(int argc, char *arg_gap[])
         };
 
         /* Declare the lenght of the header string. */
-        str_s.lenght = (
-            sizeof(str_s.line1_g)/sizeof(char) - 1
-              + sizeof(str_s.newline_g)/sizeof(char) - 1
-              + sizeof(str_s.line2a_g)/sizeof(char) - 1
+        stg_s.lenght = (
+            sizeof(stg_s.line1_g)/sizeof(char) - 1
+              + sizeof(stg_s.newline_g)/sizeof(char) - 1
+              + sizeof(stg_s.line2a_g)/sizeof(char) - 1
               + (unsigned short)tmp_s.titlel - 1
-              + sizeof(str_s.newline_g)/sizeof(char) - 1
-              + sizeof(str_s.line3a_g)/sizeof(char) - 1
+              + sizeof(stg_s.newline_g)/sizeof(char) - 1
+              + sizeof(stg_s.line3a_g)/sizeof(char) - 1
               + (unsigned short)tmp_s.columns_lmin1
-              + sizeof(str_s.newline_g)/sizeof(char) - 1
-              + sizeof(str_s.n_sing_g)/sizeof(char) - 1
-              + sizeof(str_s.newline_g)/sizeof(char) - 1
-              + sizeof(str_s.line5a_g)/sizeof(char) - 1
+              + sizeof(stg_s.newline_g)/sizeof(char) - 1
+              + sizeof(stg_s.n_sing_g)/sizeof(char) - 1
+              + sizeof(stg_s.newline_g)/sizeof(char) - 1
+              + sizeof(stg_s.line5a_g)/sizeof(char) - 1
               + (unsigned short)tmp_s.yearsl - 1
-              + sizeof(str_s.line5c_g)/sizeof(char) - 1
+              + sizeof(stg_s.line5c_g)/sizeof(char) - 1
               + (unsigned short)tmp_s.authorl - 1
-              + sizeof(str_s.newline_g)/sizeof(char) - 1
-              + sizeof(str_s.line6a_g)/sizeof(char) - 1
-              + sizeof(str_s.line6b_g)/sizeof(char) - 1
-              + sizeof(str_s.newline_g)/sizeof(char) - 1
-              + sizeof(str_s.line7b_g)/sizeof(char) - 1
-              + sizeof(str_s.line7a_g)/sizeof(char) - 1
-              + sizeof(str_s.newline_g)/sizeof(char) - 1
-              + sizeof(str_s.line8b_g)/sizeof(char) - 1
-              + sizeof(str_s.line8a_g)/sizeof(char) - 1
-              + sizeof(str_s.newline_g)/sizeof(char) - 1
-              + sizeof(str_s.line9b_g)/sizeof(char) - 1
-              + sizeof(str_s.line9a_g)/sizeof(char) - 1
-              + sizeof(str_s.newline_g)/sizeof(char) - 1
-              + sizeof(str_s.line10_g)/sizeof(char) - 1
-              + sizeof(str_s.newline_g)/sizeof(char) - 1
-              + sizeof(str_s.line11_g)/sizeof(char) - 1
-              + sizeof(str_s.newline_g)/sizeof(char) - 1
-              + sizeof(str_s.n_sing_g)/sizeof(char) - 1
-              + sizeof(str_s.newline_g)/sizeof(char)
+              + sizeof(stg_s.newline_g)/sizeof(char) - 1
+              + sizeof(stg_s.line6a_g)/sizeof(char) - 1
+              + sizeof(stg_s.line6b_g)/sizeof(char) - 1
+              + sizeof(stg_s.newline_g)/sizeof(char) - 1
+              + sizeof(stg_s.line7b_g)/sizeof(char) - 1
+              + sizeof(stg_s.line7a_g)/sizeof(char) - 1
+              + sizeof(stg_s.newline_g)/sizeof(char) - 1
+              + sizeof(stg_s.line8b_g)/sizeof(char) - 1
+              + sizeof(stg_s.line8a_g)/sizeof(char) - 1
+              + sizeof(stg_s.newline_g)/sizeof(char) - 1
+              + sizeof(stg_s.line9b_g)/sizeof(char) - 1
+              + sizeof(stg_s.line9a_g)/sizeof(char) - 1
+              + sizeof(stg_s.newline_g)/sizeof(char) - 1
+              + sizeof(stg_s.line10_g)/sizeof(char) - 1
+              + sizeof(stg_s.newline_g)/sizeof(char) - 1
+              + sizeof(stg_s.line11_g)/sizeof(char) - 1
+              + sizeof(stg_s.newline_g)/sizeof(char) - 1
+              + sizeof(stg_s.n_sing_g)/sizeof(char) - 1
+              + sizeof(stg_s.newline_g)/sizeof(char)
         );
 
         /* Declare and add dynamic memory to the header string. */
-        char *str_gp = malloc(sizeof(char) * str_s.lenght);
-        memset(str_gp, '\0', sizeof(char) * str_s.lenght);
+        char *stg_gp = malloc(sizeof(char) * stg_s.lenght);
+        memset(stg_gp, '\0', sizeof(char) * stg_s.lenght);
 
         /* Copy all strings to the header string. */
-        strcat(str_gp, str_s.line1_g);
-        strcat(str_gp, str_s.newline_g);
-        strcat(str_gp, str_s.line2a_g);
-        strcat(str_gp, tmp_s.title_gp);
-        strcat(str_gp, str_s.newline_g);
-        strcat(str_gp, str_s.line3a_g);
-        strcat(str_gp, tmp_s.columns_gp);
-        strcat(str_gp, str_s.newline_g);
-        strcat(str_gp, str_s.n_sing_g);
-        strcat(str_gp, str_s.newline_g);
-        strcat(str_gp, str_s.line5a_g);
-        strcat(str_gp, tmp_s.years_gp);
-        strcat(str_gp, str_s.line5c_g);
-        strcat(str_gp, tmp_s.author_gp);
-        strcat(str_gp, str_s.newline_g);
-        strcat(str_gp, str_s.line6a_g);
-        strcat(str_gp, str_s.line6b_g);
-        strcat(str_gp, str_s.newline_g);
-        strcat(str_gp, str_s.line7a_g);
-        strcat(str_gp, str_s.line7b_g);
-        strcat(str_gp, str_s.newline_g);
-        strcat(str_gp, str_s.line8a_g);
-        strcat(str_gp, str_s.line8b_g);
-        strcat(str_gp, str_s.newline_g);
-        strcat(str_gp, str_s.line9a_g);
-        strcat(str_gp, str_s.line9b_g);
-        strcat(str_gp, str_s.newline_g);
-        strcat(str_gp, str_s.line10_g);
-        strcat(str_gp, str_s.newline_g);
-        strcat(str_gp, str_s.line11_g);
-        strcat(str_gp, str_s.newline_g);
-        strcat(str_gp, str_s.n_sing_g);
-        strcat(str_gp, str_s.newline_g);
-        str_gp[str_s.lenght - 1] = '\0';
+        strcat(stg_gp, stg_s.line1_g);
+        strcat(stg_gp, stg_s.newline_g);
+        strcat(stg_gp, stg_s.line2a_g);
+        strcat(stg_gp, tmp_s.title_gp);
+        strcat(stg_gp, stg_s.newline_g);
+        strcat(stg_gp, stg_s.line3a_g);
+        strcat(stg_gp, tmp_s.columns_gp);
+        strcat(stg_gp, stg_s.newline_g);
+        strcat(stg_gp, stg_s.n_sing_g);
+        strcat(stg_gp, stg_s.newline_g);
+        strcat(stg_gp, stg_s.line5a_g);
+        strcat(stg_gp, tmp_s.years_gp);
+        strcat(stg_gp, stg_s.line5c_g);
+        strcat(stg_gp, tmp_s.author_gp);
+        strcat(stg_gp, stg_s.newline_g);
+        strcat(stg_gp, stg_s.line6a_g);
+        strcat(stg_gp, stg_s.line6b_g);
+        strcat(stg_gp, stg_s.newline_g);
+        strcat(stg_gp, stg_s.line7a_g);
+        strcat(stg_gp, stg_s.line7b_g);
+        strcat(stg_gp, stg_s.newline_g);
+        strcat(stg_gp, stg_s.line8a_g);
+        strcat(stg_gp, stg_s.line8b_g);
+        strcat(stg_gp, stg_s.newline_g);
+        strcat(stg_gp, stg_s.line9a_g);
+        strcat(stg_gp, stg_s.line9b_g);
+        strcat(stg_gp, stg_s.newline_g);
+        strcat(stg_gp, stg_s.line10_g);
+        strcat(stg_gp, stg_s.newline_g);
+        strcat(stg_gp, stg_s.line11_g);
+        strcat(stg_gp, stg_s.newline_g);
+        strcat(stg_gp, stg_s.n_sing_g);
+        strcat(stg_gp, stg_s.newline_g);
+        stg_gp[stg_s.lenght - 1] = '\0';
 
         /* Save the lenght of the header string. */
-        self_s->buffer_s.headerl = str_s.lenght;
+        self_sp->buffer_s.headerl = stg_s.lenght;
 
         /*
          * Free unused memory.
          * 0 == '\0' == NULL
          */
         memset(
-            self_s->data_s.copyright_s.author_gp,
+            self_sp->data_s.copyright_s.author_gp,
             '\0',
-            sizeof(char) * self_s->data_s.copyright_s.authorl
+            sizeof(char) * self_sp->data_s.copyright_s.authorl
         );
         memset(
-            self_s->data_s.pmap_s.title_gp,
+            self_sp->data_s.pmap_s.title_gp,
             '\0',
-            sizeof(char) * self_s->data_s.pmap_s.titlel
+            sizeof(char) * self_sp->data_s.pmap_s.titlel
         );
         memset(
-            self_s->data_s.copyright_s.years_gp,
+            self_sp->data_s.copyright_s.years_gp,
             '\0',
-            sizeof(char) * self_s->data_s.copyright_s.yearsl
+            sizeof(char) * self_sp->data_s.copyright_s.yearsl
         );
         memset(
             tmp_s.columns_gp,
             '\0',
             sizeof(char) * (tmp_s.columns_lmin1 + 1)
         );
-        self_s->data_s.copyright_s.authorl = 0;
-        self_s->data_s.pmap_s.titlel = 0;
-        self_s->data_s.copyright_s.yearsl = 0;
-        free(self_s->data_s.copyright_s.author_gp);
-        free(self_s->data_s.pmap_s.title_gp);
-        free(self_s->data_s.copyright_s.years_gp);
+        self_sp->data_s.copyright_s.authorl = 0;
+        self_sp->data_s.pmap_s.titlel = 0;
+        self_sp->data_s.copyright_s.yearsl = 0;
+        free(self_sp->data_s.copyright_s.author_gp);
+        free(self_sp->data_s.pmap_s.title_gp);
+        free(self_sp->data_s.copyright_s.years_gp);
         free(tmp_s.columns_gp);
-        self_s->data_s.copyright_s.author_gp = NULL;
-        self_s->data_s.pmap_s.title_gp = NULL;
-        self_s->data_s.copyright_s.years_gp = NULL;
+        self_sp->data_s.copyright_s.author_gp = NULL;
+        self_sp->data_s.pmap_s.title_gp = NULL;
+        self_sp->data_s.copyright_s.years_gp = NULL;
 
         /*
          * Clear all unused data.
          * 0 == '\0' == NULL
          */
         memset(&tmp_s, '\0', sizeof(tmp_s));
-        memset(&str_s, '\0', sizeof(str_s));
-        self_s->data_s.pmap_s.columns = 0;
+        memset(&stg_s, '\0', sizeof(stg_s));
+        self_sp->data_s.pmap_s.columns = 0;
 
         /* Return the header string. */
-        return str_gp;
+        return stg_gp;
     }
 
     char *
-    cpal_lgen_f(struct Self *self) {
+    cpal_lgen_f(struct Self *self_sp) {
         struct {
             unsigned char channelsl: 2;
             unsigned char *channels_ap;
@@ -415,12 +415,12 @@ GPLGenC(int argc, char *arg_gap[])
             unsigned long long pmapl: 33;
             char *pmap_gp;
         } tmp_s = {
-            self_s->data_s.colour_s.depthl,
-            self_s->data_s.colour_s.depth_a,
-            self_s->data_s.colour_s.typel,
-            self_s->data_s.colour_s.type_gp,
-            self_s->buffer_s.headerl,
-            self_s->header_lgen_mp(self),
+            self_sp->data_s.colour_s.depthl,
+            self_sp->data_s.colour_s.depth_a,
+            self_sp->data_s.colour_s.typel,
+            self_sp->data_s.colour_s.type_gp,
+            self_sp->buffer_s.headerl,
+            self_sp->header_lgen_mp(self_sp),
             0,
             NULL
         };
@@ -444,11 +444,11 @@ GPLGenC(int argc, char *arg_gap[])
 
             /* Set key colour lenght and array. */
             channels_s.key_ap = (
-                self_s->bchn_lgen_mp(self_s, tmp_s.channels_ap[0])
+                self_sp->bchn_lgen_mp(self_sp, tmp_s.channels_ap[0])
             );
 
             /* Set lenght generated by bchn_lgen_mp(). */
-            channels_s.key_lmin1 = self_s->buffer_s.bchn_lmin1;
+            channels_s.key_lmin1 = self_sp->buffer_s.bchn_lmin1;
 
             /*
              * Line lenght is:
@@ -527,27 +527,27 @@ GPLGenC(int argc, char *arg_gap[])
 
             /* Set blue colour lenght and array. */
             channels_s.blue_ap = (
-                self_s->bchn_lgen_mp(self_s, tmp_s.channels_ap[2])
+                self_sp->bchn_lgen_mp(self_sp, tmp_s.channels_ap[2])
             );
 
             /* Set lenght generated by bchn_lgen_mp(). */
-            channels_s.blue_lmin1 = self_s->buffer_s.bchn_lmin1;
+            channels_s.blue_lmin1 = self_sp->buffer_s.bchn_lmin1;
 
             /* Set green colour lenght and array. */
             channels_s.green_ap = (
-                self_s->bchn_lgen_mp(self_s, tmp_s.channels_ap[1])
+                self_sp->bchn_lgen_mp(self_sp, tmp_s.channels_ap[1])
             );
 
             /* Set lenght generated by bchn_lgen_mp(). */
-            channels_s.green_lmin1 = self_s->buffer_s.bchn_lmin1;
+            channels_s.green_lmin1 = self_sp->buffer_s.bchn_lmin1;
 
             /* Set red colour lenght and array. */
             channels_s.red_ap = (
-                self_s->bchn_lgen_mp(self_s, tmp_s.channels_ap[0])
+                self_sp->bchn_lgen_mp(self_sp, tmp_s.channels_ap[0])
             );
 
             /* Set lenght generated by bchn_lgen_mp(). */
-            channels_s.red_lmin1 = self_s->buffer_s.bchn_lmin1;
+            channels_s.red_lmin1 = self_sp->buffer_s.bchn_lmin1;
 
             /*
              * Line lenght is:
@@ -661,15 +661,15 @@ GPLGenC(int argc, char *arg_gap[])
         tmp_s.pmap_gp[tmp_s.pmapl - 1] = '\0';
 
         /* Save the cpal lenght. */
-        self_s->buffer_s.cpall = (
-            self_s->buffer_s.headerl + tmp_s.pmapl - 1
+        self_sp->buffer_s.cpall = (
+            self_sp->buffer_s.headerl + tmp_s.pmapl - 1
         );
 
         /* Declare and add dynamic memory to the cpal string. */
         char *cpal_gp = (
-            malloc(sizeof(char) * self_s->buffer_s.cpall)
+            malloc(sizeof(char) * self_sp->buffer_s.cpall)
         );
-        memset(cpal_gp, '\0', sizeof(char) * self_s->buffer_s.cpall);
+        memset(cpal_gp, '\0', sizeof(char) * self_sp->buffer_s.cpall);
 
         /* Merge the palette string to the header string. */
         strcat(cpal_gp, tmp_s.header_gp);
@@ -680,32 +680,32 @@ GPLGenC(int argc, char *arg_gap[])
          * 0 == '\0' == NULL
          */
         memset(
-            self_s->data_s.colour_s.depth_a,
+            self_sp->data_s.colour_s.depth_a,
             0,
-            self_s->data_s.colour_s.depthl
+            self_sp->data_s.colour_s.depthl
         );
         memset(
-            self_s->data_s.colour_s.type_gp,
+            self_sp->data_s.colour_s.type_gp,
             '\0',
-            self_s->data_s.colour_s.typel
+            self_sp->data_s.colour_s.typel
         );
         memset(
             tmp_s.header_gp,
             '\0',
-            self_s->buffer_s.headerl
+            self_sp->buffer_s.headerl
         );
         memset(
             tmp_s.pmap_gp,
             '\0',
             tmp_s.pmapl
         );
-        self_s->data_s.colour_s.depthl = 0;
-        self_s->data_s.colour_s.typel = 0;
-        self_s->buffer_s.headerl = 0;
-        free(self_s->data_s.colour_s.type_gp);
+        self_sp->data_s.colour_s.depthl = 0;
+        self_sp->data_s.colour_s.typel = 0;
+        self_sp->buffer_s.headerl = 0;
+        free(self_sp->data_s.colour_s.type_gp);
         free(tmp_s.header_gp);
         free(tmp_s.pmap_gp);
-        self_s->data_s.colour_s.type_gp = NULL;
+        self_sp->data_s.colour_s.type_gp = NULL;
 
         /*
          * Clear all unused data.
@@ -718,7 +718,7 @@ GPLGenC(int argc, char *arg_gap[])
     }
 
     void
-    finput_f(struct Self *self_s, FILE *input_lp) {
+    finput_f(struct Self *self_sp, FILE *input_lp) {
         struct {
             char character;
             unsigned char keyl: 3;
@@ -834,29 +834,29 @@ GPLGenC(int argc, char *arg_gap[])
                     if (! buffer_s.ignore) {
 
                         if (strcmp(buffer_s.key_g, "type") == 0) {
-                            strcpy(self_s->input_s.type_g, buffer_s.value_g);
-                            //self_s->input_s.typel = buffer_s.valuel;
-                            self_s->input_s.typel = strlen(buffer_s.value_g) + 1;
+                            strcpy(self_sp->input_s.type_g, buffer_s.value_g);
+                            //self_sp->input_s.typel = buffer_s.valuel;
+                            self_sp->input_s.typel = strlen(buffer_s.value_g) + 1;
                         } else if (strcmp(buffer_s.key_g, "depth") == 0) {
-                            strcpy(self_s->input_s.depth_g, buffer_s.value_g);
-                            //self_s->input_s.depthl = buffer_s.valuel;
-                            self_s->input_s.depthl = strlen(buffer_s.value_g) + 1;
+                            strcpy(self_sp->input_s.depth_g, buffer_s.value_g);
+                            //self_sp->input_s.depthl = buffer_s.valuel;
+                            self_sp->input_s.depthl = strlen(buffer_s.value_g) + 1;
                         } else if (strcmp(buffer_s.key_g, "columns") == 0) {
-                            strcpy(self_s->input_s.columns_g, buffer_s.value_g);
-                            //self_s->input_s.columnsl = buffer_s.valuel;
-                            self_s->input_s.columnsl = strlen(buffer_s.value_g) + 1;
+                            strcpy(self_sp->input_s.columns_g, buffer_s.value_g);
+                            //self_sp->input_s.columnsl = buffer_s.valuel;
+                            self_sp->input_s.columnsl = strlen(buffer_s.value_g) + 1;
                         } else if (strcmp(buffer_s.key_g, "title") == 0) {
-                            strcpy(self_s->input_s.title_g, buffer_s.value_g);
-                            //self_s->input_s.titlel = buffer_s.valuel;
-                            self_s->input_s.titlel = strlen(buffer_s.value_g) + 1;
+                            strcpy(self_sp->input_s.title_g, buffer_s.value_g);
+                            //self_sp->input_s.titlel = buffer_s.valuel;
+                            self_sp->input_s.titlel = strlen(buffer_s.value_g) + 1;
                         } else if (strcmp(buffer_s.key_g, "author") == 0) {
-                            strcpy(self_s->input_s.author_g, buffer_s.value_g);
-                            //self_s->input_s.authorl = buffer_s.valuel;
-                            self_s->input_s.authorl = strlen(buffer_s.value_g) + 1;
+                            strcpy(self_sp->input_s.author_g, buffer_s.value_g);
+                            //self_sp->input_s.authorl = buffer_s.valuel;
+                            self_sp->input_s.authorl = strlen(buffer_s.value_g) + 1;
                         } else if (strcmp(buffer_s.key_g, "years") == 0) {
-                            strcpy(self_s->input_s.years_g, buffer_s.value_g);
-                            //self_s->input_s.yearsl = buffer_s.valuel;
-                            self_s->input_s.yearsl = strlen(buffer_s.value_g) + 1;
+                            strcpy(self_sp->input_s.years_g, buffer_s.value_g);
+                            //self_sp->input_s.yearsl = buffer_s.valuel;
+                            self_sp->input_s.yearsl = strlen(buffer_s.value_g) + 1;
                         }
 
                         memset(
@@ -890,7 +890,7 @@ GPLGenC(int argc, char *arg_gap[])
     }
 
     void
-    run_f(struct Self *self_s, int argc, char *arg_gap[]) {
+    run_f(struct Self *self_sp, int argc, char *arg_gap[]) {
         /* Default values. */
         struct {
             unsigned char typel: 3;
@@ -944,69 +944,69 @@ GPLGenC(int argc, char *arg_gap[])
         sprintf(tmp_s.years_g, "%hu", tmp_s.tm_sp->tm_year + 1900);
 
         /* Add dynamic memories to a new structure. */
-        self_s->data_s.colour_s.type_gp = (
+        self_sp->data_s.colour_s.type_gp = (
             malloc(sizeof(char) * tmp_s.typel)
         );
-        self_s->data_s.pmap_s.title_gp = (
+        self_sp->data_s.pmap_s.title_gp = (
             malloc(sizeof(char) * tmp_s.titlel)
         );
-        self_s->data_s.copyright_s.author_gp = (
+        self_sp->data_s.copyright_s.author_gp = (
             malloc(sizeof(char) * tmp_s.authorl)
         );
-        self_s->data_s.copyright_s.years_gp = (
+        self_sp->data_s.copyright_s.years_gp = (
             malloc(sizeof(char) * tmp_s.yearsl)
         );
-        self_s->error_s.value_gp = (
+        self_sp->error_s.value_gp = (
             malloc(sizeof(char) * tmp_s.valuel)
         );
         memset(
-            self_s->data_s.colour_s.type_gp,
+            self_sp->data_s.colour_s.type_gp,
             '\0',
             sizeof(char) * tmp_s.typel
         );
         memset(
-            self_s->data_s.pmap_s.title_gp,
+            self_sp->data_s.pmap_s.title_gp,
             '\0',
             sizeof(char) * tmp_s.titlel
         );
         memset(
-            self_s->data_s.copyright_s.author_gp,
+            self_sp->data_s.copyright_s.author_gp,
             '\0',
             sizeof(char) * tmp_s.authorl
         );
         memset(
-            self_s->data_s.copyright_s.years_gp,
+            self_sp->data_s.copyright_s.years_gp,
             '\0',
             sizeof(char) * tmp_s.yearsl
         );
         memset(
-            self_s->error_s.value_gp,
+            self_sp->error_s.value_gp,
             '\0',
             sizeof(char) * tmp_s.valuel
         );
 
         /* Add default values to a new structure. */
-        self_s->data_s.colour_s.typel = tmp_s.typel;
-        strcpy(self_s->data_s.colour_s.type_gp, tmp_s.type_g);
-        self_s->data_s.colour_s.depthl = tmp_s.depthl;
-        memcpy(self_s->data_s.colour_s.depth_a, tmp_s.depth_a, tmp_s.depthl);
-        self_s->data_s.pmap_s.titlel = tmp_s.titlel;
-        strcpy(self_s->data_s.pmap_s.title_gp, tmp_s.title_g);
-        self_s->data_s.pmap_s.columns = tmp_s.columns;
-        self_s->data_s.copyright_s.authorl = tmp_s.authorl;
-        strcpy(self_s->data_s.copyright_s.author_gp, tmp_s.author_g);
-        self_s->data_s.copyright_s.yearsl = tmp_s.yearsl;
-        strcpy(self_s->data_s.copyright_s.years_gp, tmp_s.years_g);
-        self_s->error_s.code = tmp_s.code;
-        self_s->error_s.valuel = tmp_s.valuel;
-        strcpy(self_s->error_s.value_gp, tmp_s.value_g);
+        self_sp->data_s.colour_s.typel = tmp_s.typel;
+        strcpy(self_sp->data_s.colour_s.type_gp, tmp_s.type_g);
+        self_sp->data_s.colour_s.depthl = tmp_s.depthl;
+        memcpy(self_sp->data_s.colour_s.depth_a, tmp_s.depth_a, tmp_s.depthl);
+        self_sp->data_s.pmap_s.titlel = tmp_s.titlel;
+        strcpy(self_sp->data_s.pmap_s.title_gp, tmp_s.title_g);
+        self_sp->data_s.pmap_s.columns = tmp_s.columns;
+        self_sp->data_s.copyright_s.authorl = tmp_s.authorl;
+        strcpy(self_sp->data_s.copyright_s.author_gp, tmp_s.author_g);
+        self_sp->data_s.copyright_s.yearsl = tmp_s.yearsl;
+        strcpy(self_sp->data_s.copyright_s.years_gp, tmp_s.years_g);
+        self_sp->error_s.code = tmp_s.code;
+        self_sp->error_s.valuel = tmp_s.valuel;
+        strcpy(self_sp->error_s.value_gp, tmp_s.value_g);
 
         /* Add all functions to a new structure. */
-        self_s->bchn_lgen_mp = &bchn_lgen_f;
-        self_s->header_lgen_mp = &header_lgen_f;
-        self_s->cpal_lgen_mp = &cpal_lgen_f;
-        self_s->finput_mp = &finput_f;
-        self_s->run_mp = &run_f;
+        self_sp->bchn_lgen_mp = &bchn_lgen_f;
+        self_sp->header_lgen_mp = &header_lgen_f;
+        self_sp->cpal_lgen_mp = &cpal_lgen_f;
+        self_sp->finput_mp = &finput_f;
+        self_sp->run_mp = &run_f;
 
         /* This file is in arg_gap[0]. */
 
@@ -1017,13 +1017,13 @@ GPLGenC(int argc, char *arg_gap[])
             tmp_s.file_lp = fopen(tmp_s.input_gp, "r");
 
             if (tmp_s.file_lp) {
-                self_s->finput_mp(self_s, tmp_s.file_lp);
-                tmp_s.config_sp = &self_s->input_s;
+                self_sp->finput_mp(self_sp, tmp_s.file_lp);
+                tmp_s.config_sp = &self_sp->input_s;
                 fclose(tmp_s.file_lp);
             } else {
-                self_s->error_s.code = errno;
-                self_s->error_s.valuel = strlen(tmp_s.input_gp) + 1;
-                self_s->error_s.value_gp = tmp_s.input_gp;
+                self_sp->error_s.code = errno;
+                self_sp->error_s.valuel = strlen(tmp_s.input_gp) + 1;
+                self_sp->error_s.value_gp = tmp_s.input_gp;
             }
             tmp_s.file_lp = NULL;
         }
@@ -1032,21 +1032,21 @@ GPLGenC(int argc, char *arg_gap[])
         if (tmp_s.config_sp) {
             if (tmp_s.config_sp->type_g) {
                 memset(
-                    self_s->data_s.colour_s.type_gp,
+                    self_sp->data_s.colour_s.type_gp,
                     '\0',
-                    sizeof(char) * self_s->data_s.colour_s.typel
+                    sizeof(char) * self_sp->data_s.colour_s.typel
                 );
-                self_s->data_s.colour_s.typel = tmp_s.config_sp->typel;
+                self_sp->data_s.colour_s.typel = tmp_s.config_sp->typel;
 
-                self_s->data_s.colour_s.type_gp = (
+                self_sp->data_s.colour_s.type_gp = (
                     realloc(
-                        self_s->data_s.colour_s.type_gp,
-                        sizeof(char) * self_s->data_s.colour_s.typel
+                        self_sp->data_s.colour_s.type_gp,
+                        sizeof(char) * self_sp->data_s.colour_s.typel
                     )
                 );
 
                 strcpy(
-                    self_s->data_s.colour_s.type_gp,
+                    self_sp->data_s.colour_s.type_gp,
                     tmp_s.config_sp->type_g
                 );
 
@@ -1067,7 +1067,7 @@ GPLGenC(int argc, char *arg_gap[])
                     1
                 };
                 depth_s.data_ap[depth_s.lenght - 1] = (
-                    self_s->data_s.colour_s.depth_a[depth_s.lenght - 1]
+                    self_sp->data_s.colour_s.depth_a[depth_s.lenght - 1]
                 );
 
                 for (unsigned char index = 0;
@@ -1095,7 +1095,7 @@ GPLGenC(int argc, char *arg_gap[])
                                 )
                             );
                             depth_s.data_ap[depth_s.lenght] = (
-                                self_s->data_s.colour_s.depth_a[depth_s.lenght]
+                                self_sp->data_s.colour_s.depth_a[depth_s.lenght]
                             );
                         }
                     }
@@ -1106,7 +1106,7 @@ GPLGenC(int argc, char *arg_gap[])
                     }
                 }
 
-                memcpy(self_s->data_s.colour_s.depth_a, depth_s.data_ap, depth_s.lenght);
+                memcpy(self_sp->data_s.colour_s.depth_a, depth_s.data_ap, depth_s.lenght);
 
                 memset(depth_s.data_ap, 0, sizeof(char) * depth_s.lenght);
                 free(depth_s.data_ap);
@@ -1122,21 +1122,21 @@ GPLGenC(int argc, char *arg_gap[])
 
             if (tmp_s.config_sp->title_g) {
                 memset(
-                    self_s->data_s.pmap_s.title_gp,
+                    self_sp->data_s.pmap_s.title_gp,
                     '\0',
-                    sizeof(char) * self_s->data_s.pmap_s.titlel
+                    sizeof(char) * self_sp->data_s.pmap_s.titlel
                 );
-                self_s->data_s.pmap_s.titlel = tmp_s.config_sp->titlel;
+                self_sp->data_s.pmap_s.titlel = tmp_s.config_sp->titlel;
 
-                self_s->data_s.pmap_s.title_gp = (
+                self_sp->data_s.pmap_s.title_gp = (
                     realloc(
-                        self_s->data_s.pmap_s.title_gp,
-                        sizeof(char) * self_s->data_s.pmap_s.titlel
+                        self_sp->data_s.pmap_s.title_gp,
+                        sizeof(char) * self_sp->data_s.pmap_s.titlel
                     )
                 );
 
                 strcpy(
-                    self_s->data_s.pmap_s.title_gp,
+                    self_sp->data_s.pmap_s.title_gp,
                     tmp_s.config_sp->title_g
                 );
 
@@ -1159,7 +1159,7 @@ GPLGenC(int argc, char *arg_gap[])
 
                 if (tmp_s.isdigit
                       && strtoul(tmp_s.config_sp->columns_g, NULL, 10) >= 0)
-                    self_s->data_s.pmap_s.columns = (
+                    self_sp->data_s.pmap_s.columns = (
                         strtoul(tmp_s.config_sp->columns_g, NULL, 10)
                     );
 
@@ -1174,21 +1174,21 @@ GPLGenC(int argc, char *arg_gap[])
 
             if (tmp_s.config_sp->author_g) {
                 memset(
-                    self_s->data_s.copyright_s.author_gp,
+                    self_sp->data_s.copyright_s.author_gp,
                     '\0',
-                    sizeof(char) * self_s->data_s.copyright_s.authorl
+                    sizeof(char) * self_sp->data_s.copyright_s.authorl
                 );
-                self_s->data_s.copyright_s.authorl = tmp_s.config_sp->authorl;
+                self_sp->data_s.copyright_s.authorl = tmp_s.config_sp->authorl;
 
-                self_s->data_s.copyright_s.author_gp = (
+                self_sp->data_s.copyright_s.author_gp = (
                     realloc(
-                        self_s->data_s.copyright_s.author_gp,
-                        sizeof(char) * self_s->data_s.copyright_s.authorl
+                        self_sp->data_s.copyright_s.author_gp,
+                        sizeof(char) * self_sp->data_s.copyright_s.authorl
                     )
                 );
 
                 strcpy(
-                    self_s->data_s.copyright_s.author_gp,
+                    self_sp->data_s.copyright_s.author_gp,
                     tmp_s.config_sp->author_g
                 );
 
@@ -1215,41 +1215,41 @@ GPLGenC(int argc, char *arg_gap[])
                         < strtoul(tmp_s.years_g, NULL, 10)
                       || ! tmp_s.isdigit) {
                     memset(
-                        self_s->data_s.copyright_s.years_gp,
+                        self_sp->data_s.copyright_s.years_gp,
                         '\0',
-                        sizeof(char) * self_s->data_s.copyright_s.yearsl
+                        sizeof(char) * self_sp->data_s.copyright_s.yearsl
                     );
-                    self_s->data_s.copyright_s.yearsl = tmp_s.config_sp->yearsl;
+                    self_sp->data_s.copyright_s.yearsl = tmp_s.config_sp->yearsl;
 
-                    self_s->data_s.copyright_s.years_gp = (
+                    self_sp->data_s.copyright_s.years_gp = (
                         realloc(
-                            self_s->data_s.copyright_s.years_gp,
-                            sizeof(char) * self_s->data_s.copyright_s.yearsl
+                            self_sp->data_s.copyright_s.years_gp,
+                            sizeof(char) * self_sp->data_s.copyright_s.yearsl
                         )
                     );
 
                     strcpy(
-                        self_s->data_s.copyright_s.years_gp,
+                        self_sp->data_s.copyright_s.years_gp,
                         tmp_s.config_sp->years_g
                     );
                 } else if (tmp_s.isdigit);
                 else {
                     memset(
-                        self_s->data_s.copyright_s.years_gp,
+                        self_sp->data_s.copyright_s.years_gp,
                         '\0',
-                        sizeof(char) * self_s->data_s.copyright_s.yearsl
+                        sizeof(char) * self_sp->data_s.copyright_s.yearsl
                     );
-                    self_s->data_s.copyright_s.yearsl = tmp_s.config_sp->yearsl;
+                    self_sp->data_s.copyright_s.yearsl = tmp_s.config_sp->yearsl;
 
-                    self_s->data_s.copyright_s.years_gp = (
+                    self_sp->data_s.copyright_s.years_gp = (
                         realloc(
-                            self_s->data_s.copyright_s.years_gp,
-                            sizeof(char) * self_s->data_s.copyright_s.yearsl
+                            self_sp->data_s.copyright_s.years_gp,
+                            sizeof(char) * self_sp->data_s.copyright_s.yearsl
                         )
                     );
 
                     strcpy(
-                        self_s->data_s.copyright_s.years_gp,
+                        self_sp->data_s.copyright_s.years_gp,
                         tmp_s.config_sp->years_g
                     );
                 }
@@ -1264,7 +1264,7 @@ GPLGenC(int argc, char *arg_gap[])
             }
         }
 
-        tmp_s.cpal_gp = self_s->cpal_lgen_mp(self);
+        tmp_s.cpal_gp = self_sp->cpal_lgen_mp(self_sp);
         if (argc > 2)
             tmp_s.output_gp = arg_gap[2];
 
@@ -1274,14 +1274,14 @@ GPLGenC(int argc, char *arg_gap[])
                 fwrite(
                     tmp_s.cpal_gp,
                     sizeof(char),
-                    self_s->buffer_s.cpall,
+                    self_sp->buffer_s.cpall,
                     tmp_s.file_lp
                 );
                 fclose(tmp_s.file_lp);
             } else {
-                self_s->error_s.code = errno;
-                self_s->error_s.valuel = strlen(tmp_s.output_gp) + 1;
-                self_s->error_s.value_gp = tmp_s.output_gp;
+                self_sp->error_s.code = errno;
+                self_sp->error_s.valuel = strlen(tmp_s.output_gp) + 1;
+                self_sp->error_s.value_gp = tmp_s.output_gp;
                 printf("%s\n", tmp_s.cpal_gp);
             }
             tmp_s.file_lp = NULL;
@@ -1290,15 +1290,15 @@ GPLGenC(int argc, char *arg_gap[])
         }
         tmp_s.output_gp = NULL;
 
-        if (self_s->error_s.code) {
+        if (self_sp->error_s.code) {
             struct {
                 char code;
                 unsigned char valuel;
                 char *value_gp;
             } error_s = {
-                self_s->error_s.code,
-                self_s->error_s.valuel,
-                self_s->error_s.value_gp
+                self_sp->error_s.code,
+                self_sp->error_s.valuel,
+                self_sp->error_s.value_gp
             };
 
             /*
@@ -1318,19 +1318,19 @@ GPLGenC(int argc, char *arg_gap[])
              * 0 == '\0' == NULL
              */
             memset(
-                self_s->error_s.value_gp,
+                self_sp->error_s.value_gp,
                 '\0',
-                sizeof(char) * self_s->error_s.valuel
+                sizeof(char) * self_sp->error_s.valuel
             );
             memset(
                 error_s.value_gp,
                 '\0',
                 sizeof(char) * tmp_s.valuel
             );
-            self_s->error_s.code = 0;
-            self_s->error_s.valuel = 0;
-            free(self_s->error_s.value_gp);
-            self_s->error_s.value_gp = NULL;
+            self_sp->error_s.code = 0;
+            self_sp->error_s.valuel = 0;
+            free(self_sp->error_s.value_gp);
+            self_sp->error_s.value_gp = NULL;
 
             /*
              * Clear all unused error data.
@@ -1356,9 +1356,9 @@ GPLGenC(int argc, char *arg_gap[])
         memset(
             tmp_s.cpal_gp,
             '\0',
-            sizeof(char) * self_s->buffer_s.cpall
+            sizeof(char) * self_sp->buffer_s.cpall
         );
-        self_s->buffer_s.cpall = 0;
+        self_sp->buffer_s.cpall = 0;
         free(tmp_s.cpal_gp);
 
         /*
