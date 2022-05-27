@@ -36,11 +36,12 @@ class GPLGenC {
         'copyright_a' => [
             'author' => 'anonymous',
             'years' => YEAR
-        ],
-        'error_a' => [
-            'code' => 0,
-            'value' => 'none'
         ]
+    ];
+
+    private $error_a = [
+        'code' => 0,
+        'value' => 'none'
     ];
 
     final private function bchn_lgen_m($byte = 8) {
@@ -54,7 +55,8 @@ class GPLGenC {
               and strpos($byte, '.')))
             $byte = intval($byte);
 
-        $size = 2**$byte - 1;
+        $quantity = 2**$byte - 1;
+        $max = 2**8 - 1;
 
         /*
          * Round half away from zero division for integer calcutation:
@@ -108,21 +110,21 @@ class GPLGenC {
          * (x + x%y) // y == k(round)
          * ---
          *
-         * Integers calcutation:  floor((x + x%y) / y))
+         * Integer calcutation:  floor((x + x%y) / y))
          */
         $channel_a = [];
-        for ($index = 0; $index <= $size; $index++) {
+        for ($index = 0; $index <= $quantity; $index++) {
             // Float calcutation:  round(x / y, 0, PHP_ROUND_HALF_UP)
             // $channel_a[$index] = \
-            //   round($index * 255 / $size, 0, PHP_ROUND_HALF_UP);
+            //   round($index * 255 / $quantity, 0, PHP_ROUND_HALF_UP);
 
-            // Integers calcutation:  floor((x + x%y) / y))
+            // Integer calcutation:  floor((x + x%y) / y))
             $channel_a[$index] = (
-                floor(($index*255 + $index*255%$size) / $size)
+                floor(($index*$max + $index*$max%$quantity) / $quantity)
             );
-       }
+        }
 
-        unset($index, $size);
+        unset($index, $max, $quantity);
 
         return $channel_a;
     }
@@ -225,7 +227,15 @@ class GPLGenC {
         return $this->header_lgen_m() . $palette_map;
     }
 
-    final public function run_m($input = null, $output = null) {
+    final public function run_m($args = []) {
+        // This script is in args[0]
+
+        if (count($args) > 1)
+            $input = $args[1];
+
+        if (count($args) > 2)
+            $output = $args[2];
+
         $config_a = null;
         if ($input)
             try {
@@ -258,8 +268,8 @@ class GPLGenC {
                     unset($file);
                 }
             } catch (Exception $ex) {
-                $this->data_a['error_a']['code'] = $ex->getCode();
-                $this->data_a['error_a']['value'] = input;
+                $this->error_a['code'] = $ex->getCode();
+                $this->error_a['value'] = input;
                 unset($ex);
             }
 
@@ -324,8 +334,8 @@ class GPLGenC {
                     unset($file);
                 }
             } catch (Exception $ex) {
-                $this->data_a['error_a']['code'] = $ex->getCode();
-                $this->data_a['error_a']['value'] = output;
+                $this->error_a['code'] = $ex->getCode();
+                $this->error_a['value'] = output;
                 unset($ex);
 
                 echo $this->cpal_lgen_m() . PHP_EOL;
@@ -333,9 +343,9 @@ class GPLGenC {
         else
             echo $this->cpal_lgen_m() . PHP_EOL;
 
-        if ($this->data_a['error_a']['code'] != 0) {
-            $code = $this->data_a['error_a']['code'];
-            $value = $this->data_a['error_a']['value'];
+        if ($this->error_a['code'] != 0) {
+            $code = $this->error_a['code'];
+            $value = $this->error_a['value'];
 
             switch ($code) {
                 case 2:
@@ -360,20 +370,10 @@ class GPLGenC {
         }
     }
 
-    final public function __construct($input = null, $output = null) {
-        $this->run_m($input, $output);
+    final public function __construct($args = []) {
+        $this->run_m($args);
     }
 }
 
 
-$arg = [null, null];
-
-// This file is in argv[0]
-
-if (count($argv) > 1)
-    $arg[0] = $argv[1];
-
-if (count($argv) > 2)
-    $arg[1] = $argv[2];
-
-new GPLGenC($arg[0], $arg[1]);
+new GPLGenC($argv);
