@@ -40,77 +40,71 @@ enum {
  */
 
 
-/* This function emulate a class with constructor. */
-void *
-GPLGenC(int argc, char *arg_gap[])
+/*
+ * This function with structure (map) as return
+ * emulate a class with constructor.
+ */
+struct Self {
+    struct {
+        unsigned char bchn_lmin1;
+        unsigned short headerl: 11;
+        unsigned long long cpall: 33;
+    } buffer_s;
+
+    struct {
+        struct {
+            unsigned char typel;
+            char *type_gp;
+            unsigned char depthl: 2;
+            unsigned char depth_a[3];
+        } colour_s;
+
+        struct {
+            unsigned char titlel;
+            char *title_gp;
+            unsigned char columns;
+        } pmap_s;
+
+        struct {
+            unsigned char authorl;
+            char *author_gp;
+            unsigned char yearsl;
+            char *years_gp;
+        } copyright_s;
+   } data_s;
+
+   struct {
+       int code: 5;
+       unsigned char valuel;
+       char *value_gp;
+   } error_s;
+
+   struct Input {
+       unsigned char typel;
+       char type_g[1 << 8];
+       unsigned char depthl;
+       char depth_g[1 << 8];
+       unsigned char titlel;
+       char title_g[1 << 8];
+       unsigned char columnsl;
+       char columns_g[1 << 8];
+       unsigned char authorl;
+       char author_g[1 << 8];
+       unsigned char yearsl;
+       char years_g[1 << 8];
+   } input_s;
+
+   unsigned char *(*bchn_lgen_mp)(struct Self *, unsigned char);
+   char *(*header_lgen_mp)(struct Self *);
+   char *(*cpal_lgen_mp)(struct Self *);
+   void (*finput_mp)(struct Self *, FILE *);
+   void (*run_mp)(struct Self *, int, char *[]);
+} *GPLGenC(int argc, char *arg_gap[])
 {
     /*
-     * All structures (maps) and functions
-     * are created inside of this function,
-     * to allow use only on a new structure (class)
-     * and not on this function.
+     * All functions are created inside of this function,
+     * to allow use only on a new structure (class).
      */
-
-    /*
-     * This structure (map) with "new" function pointers is required
-     * to generate a new structure (class).
-     */
-    struct Self {
-        struct {
-            unsigned char bchn_lmin1;
-            unsigned short headerl: 11;
-            unsigned long long cpall: 33;
-        } buffer_s;
-
-        struct {
-            struct {
-                unsigned char typel;
-                char *type_gp;
-                unsigned char depthl: 2;
-                unsigned char depth_a[3];
-            } colour_s;
-
-            struct {
-                unsigned char titlel;
-                char *title_gp;
-                unsigned char columns;
-            } pmap_s;
-
-            struct {
-                unsigned char authorl;
-                char *author_gp;
-                unsigned char yearsl;
-                char *years_gp;
-            } copyright_s;
-       } data_s;
-
-       struct {
-           int code: 5;
-           unsigned char valuel;
-           char *value_gp;
-       } error_s;
-
-       struct Input {
-           unsigned char typel;
-           char type_g[1 << 8];
-           unsigned char depthl;
-           char depth_g[1 << 8];
-           unsigned char titlel;
-           char title_g[1 << 8];
-           unsigned char columnsl;
-           char columns_g[1 << 8];
-           unsigned char authorl;
-           char author_g[1 << 8];
-           unsigned char yearsl;
-           char years_g[1 << 8];
-       } input_s;
-
-       unsigned char *(*bchn_lgen_mp)(struct Self *, unsigned char);
-       char *(*header_lgen_mp)(struct Self *);
-       char *(*cpal_lgen_mp)(struct Self *);
-       void (*finput_mp)(struct Self *, FILE *);
-       void (*run_mp)(struct Self *, int, char *[]);
-    };
 
     unsigned char *
     bchn_lgen_f(struct Self *self_sp, unsigned char byte) {
