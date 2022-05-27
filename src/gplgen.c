@@ -39,77 +39,81 @@ enum {
  * to set a better code style.
  */
 
-/*
- * This structure (map) with "new" function pointers is required
- * to generate a new structure (class).
- */
-
-
-/* This structure emulate a class interface. */
-struct GPLGenC {
-    struct {
-        unsigned char bchn_lmin1;
-        unsigned short headerl: 11;
-        unsigned long long cpall: 33;
-    } buffer_s;
-
-    struct {
-        struct {
-            unsigned char typel;
-            char *type_gp;
-            unsigned char depthl: 2;
-            unsigned char depth_a[3];
-        } colour_s;
-
-        struct {
-            unsigned char titlel;
-            char *title_gp;
-            unsigned char columns;
-        } pmap_s;
-
-        struct {
-            unsigned char authorl;
-            char *author_gp;
-            unsigned char yearsl;
-            char *years_gp;
-        } copyright_s;
-    } data_s;
-
-    struct {
-        int code: 5;
-        unsigned char valuel;
-        char *value_gp;
-    } error_s;
-
-    struct Input {
-        unsigned char typel;
-        char type_g[1 << 8];
-        unsigned char depthl;
-        char depth_g[1 << 8];
-        unsigned char titlel;
-        char title_g[1 << 8];
-        unsigned char columnsl;
-        char columns_g[1 << 8];
-        unsigned char authorl;
-        char author_g[1 << 8];
-        unsigned char yearsl;
-        char years_g[1 << 8];
-    } input_s;
-
-    unsigned char *(*bchn_lgen_mp)(struct GPLGenC *, unsigned char);
-    char *(*header_lgen_mp)(struct GPLGenC *);
-    char *(*cpal_lgen_mp)(struct GPLGenC *);
-    void (*finput_mp)(struct GPLGenC *, FILE *);
-    void (*run_mp)(struct GPLGenC *, int, char *[]);
-};
-
 
 /* This function emulate a class with constructor. */
-struct GPLGenC
+void *
 GPLGenC(int argc, char *arg_gap[])
 {
+    /*
+     * All structures (maps) and functions
+     * are created inside of this function,
+     * to allow use only on a new structure (class)
+     * and not on this function.
+     */
+
+    /*
+     * This structure (map) with "new" function pointers is required
+     * to generate a new structure (class).
+     */
+    struct Self {
+        struct {
+            unsigned char bchn_lmin1;
+            unsigned short headerl: 11;
+            unsigned long long cpall: 33;
+        } buffer_s;
+
+        struct {
+            struct {
+                unsigned char typel;
+                char *type_gp;
+                unsigned char depthl: 2;
+                unsigned char depth_a[3];
+            } colour_s;
+
+            struct {
+                unsigned char titlel;
+                char *title_gp;
+                unsigned char columns;
+            } pmap_s;
+
+            struct {
+                unsigned char authorl;
+                char *author_gp;
+                unsigned char yearsl;
+                char *years_gp;
+            } copyright_s;
+       } data_s;
+
+       struct {
+           int code: 5;
+           unsigned char valuel;
+           char *value_gp;
+       } error_s;
+
+       struct Input {
+           unsigned char typel;
+           char type_g[1 << 8];
+           unsigned char depthl;
+           char depth_g[1 << 8];
+           unsigned char titlel;
+           char title_g[1 << 8];
+           unsigned char columnsl;
+           char columns_g[1 << 8];
+           unsigned char authorl;
+           char author_g[1 << 8];
+           unsigned char yearsl;
+           char years_g[1 << 8];
+       } input_s;
+
+       unsigned char *(*bchn_lgen_mp)(struct Self *, unsigned char);
+       char *(*header_lgen_mp)(struct Self *);
+       char *(*cpal_lgen_mp)(struct Self *);
+       void (*finput_mp)(struct Self *, FILE *);
+       void (*run_mp)(struct Self *, int, char *[]);
+    };
+
     unsigned char *
-    bchn_lgen_f(struct GPLGenC *self, unsigned char byte) {
+    bchn_lgen_f(struct Self *self_s, unsigned char byte) {
         if (byte<1 || byte>8)
             byte = 8;
 
@@ -187,13 +191,13 @@ GPLGenC(int argc, char *arg_gap[])
         }
 
         /* Save the lenght and return the channel array. */
-        self->buffer_s.bchn_lmin1 = quantity;
+        self_s->buffer_s.bchn_lmin1 = quantity;
         byte, quantity = 0, 0;
         return channel_ap;
     }
 
     char *
-    header_lgen_f(struct GPLGenC *self) {
+    header_lgen_f(struct Self *self) {
         /* Default values. */
         struct {
             unsigned char authorl;
@@ -206,15 +210,15 @@ GPLGenC(int argc, char *arg_gap[])
             unsigned char yearsl;
             char *years_gp;
         } tmp_s = {
-            self->data_s.copyright_s.authorl,
-            self->data_s.copyright_s.author_gp,
-            self->data_s.pmap_s.columns,
+            self_s->data_s.copyright_s.authorl,
+            self_s->data_s.copyright_s.author_gp,
+            self_s->data_s.pmap_s.columns,
             0,
             NULL,
-            self->data_s.pmap_s.titlel,
-            self->data_s.pmap_s.title_gp,
-            self->data_s.copyright_s.yearsl,
-            self->data_s.copyright_s.years_gp
+            self_s->data_s.pmap_s.titlel,
+            self_s->data_s.pmap_s.title_gp,
+            self_s->data_s.copyright_s.yearsl,
+            self_s->data_s.copyright_s.years_gp
         };
 
         /* Set columns values. */
@@ -350,42 +354,42 @@ GPLGenC(int argc, char *arg_gap[])
         str_gp[str_s.lenght - 1] = '\0';
 
         /* Save the lenght of the header string. */
-        self->buffer_s.headerl = str_s.lenght;
+        self_s->buffer_s.headerl = str_s.lenght;
 
         /*
          * Free unused memory.
          * 0 == '\0' == NULL
          */
         memset(
-            self->data_s.copyright_s.author_gp,
+            self_s->data_s.copyright_s.author_gp,
             '\0',
-            sizeof(char) * self->data_s.copyright_s.authorl
+            sizeof(char) * self_s->data_s.copyright_s.authorl
         );
         memset(
-            self->data_s.pmap_s.title_gp,
+            self_s->data_s.pmap_s.title_gp,
             '\0',
-            sizeof(char) * self->data_s.pmap_s.titlel
+            sizeof(char) * self_s->data_s.pmap_s.titlel
         );
         memset(
-            self->data_s.copyright_s.years_gp,
+            self_s->data_s.copyright_s.years_gp,
             '\0',
-            sizeof(char) * self->data_s.copyright_s.yearsl
+            sizeof(char) * self_s->data_s.copyright_s.yearsl
         );
         memset(
             tmp_s.columns_gp,
             '\0',
             sizeof(char) * (tmp_s.columns_lmin1 + 1)
         );
-        self->data_s.copyright_s.authorl = 0;
-        self->data_s.pmap_s.titlel = 0;
-        self->data_s.copyright_s.yearsl = 0;
-        free(self->data_s.copyright_s.author_gp);
-        free(self->data_s.pmap_s.title_gp);
-        free(self->data_s.copyright_s.years_gp);
+        self_s->data_s.copyright_s.authorl = 0;
+        self_s->data_s.pmap_s.titlel = 0;
+        self_s->data_s.copyright_s.yearsl = 0;
+        free(self_s->data_s.copyright_s.author_gp);
+        free(self_s->data_s.pmap_s.title_gp);
+        free(self_s->data_s.copyright_s.years_gp);
         free(tmp_s.columns_gp);
-        self->data_s.copyright_s.author_gp = NULL;
-        self->data_s.pmap_s.title_gp = NULL;
-        self->data_s.copyright_s.years_gp = NULL;
+        self_s->data_s.copyright_s.author_gp = NULL;
+        self_s->data_s.pmap_s.title_gp = NULL;
+        self_s->data_s.copyright_s.years_gp = NULL;
 
         /*
          * Clear all unused data.
@@ -393,14 +397,14 @@ GPLGenC(int argc, char *arg_gap[])
          */
         memset(&tmp_s, '\0', sizeof(tmp_s));
         memset(&str_s, '\0', sizeof(str_s));
-        self->data_s.pmap_s.columns = 0;
+        self_s->data_s.pmap_s.columns = 0;
 
         /* Return the header string. */
         return str_gp;
     }
 
     char *
-    cpal_lgen_f(struct GPLGenC *self) {
+    cpal_lgen_f(struct Self *self) {
         struct {
             unsigned char channelsl: 2;
             unsigned char *channels_ap;
@@ -411,12 +415,12 @@ GPLGenC(int argc, char *arg_gap[])
             unsigned long long pmapl: 33;
             char *pmap_gp;
         } tmp_s = {
-            self->data_s.colour_s.depthl,
-            self->data_s.colour_s.depth_a,
-            self->data_s.colour_s.typel,
-            self->data_s.colour_s.type_gp,
-            self->buffer_s.headerl,
-            self->header_lgen_mp(self),
+            self_s->data_s.colour_s.depthl,
+            self_s->data_s.colour_s.depth_a,
+            self_s->data_s.colour_s.typel,
+            self_s->data_s.colour_s.type_gp,
+            self_s->buffer_s.headerl,
+            self_s->header_lgen_mp(self),
             0,
             NULL
         };
@@ -440,11 +444,11 @@ GPLGenC(int argc, char *arg_gap[])
 
             /* Set key colour lenght and array. */
             channels_s.key_ap = (
-                self->bchn_lgen_mp(self, tmp_s.channels_ap[0])
+                self_s->bchn_lgen_mp(self_s, tmp_s.channels_ap[0])
             );
 
             /* Set lenght generated by bchn_lgen_mp(). */
-            channels_s.key_lmin1 = self->buffer_s.bchn_lmin1;
+            channels_s.key_lmin1 = self_s->buffer_s.bchn_lmin1;
 
             /*
              * Line lenght is:
@@ -523,27 +527,27 @@ GPLGenC(int argc, char *arg_gap[])
 
             /* Set blue colour lenght and array. */
             channels_s.blue_ap = (
-                self->bchn_lgen_mp(self, tmp_s.channels_ap[2])
+                self_s->bchn_lgen_mp(self_s, tmp_s.channels_ap[2])
             );
 
             /* Set lenght generated by bchn_lgen_mp(). */
-            channels_s.blue_lmin1 = self->buffer_s.bchn_lmin1;
+            channels_s.blue_lmin1 = self_s->buffer_s.bchn_lmin1;
 
             /* Set green colour lenght and array. */
             channels_s.green_ap = (
-                self->bchn_lgen_mp(self, tmp_s.channels_ap[1])
+                self_s->bchn_lgen_mp(self_s, tmp_s.channels_ap[1])
             );
 
             /* Set lenght generated by bchn_lgen_mp(). */
-            channels_s.green_lmin1 = self->buffer_s.bchn_lmin1;
+            channels_s.green_lmin1 = self_s->buffer_s.bchn_lmin1;
 
             /* Set red colour lenght and array. */
             channels_s.red_ap = (
-                self->bchn_lgen_mp(self, tmp_s.channels_ap[0])
+                self_s->bchn_lgen_mp(self_s, tmp_s.channels_ap[0])
             );
 
             /* Set lenght generated by bchn_lgen_mp(). */
-            channels_s.red_lmin1 = self->buffer_s.bchn_lmin1;
+            channels_s.red_lmin1 = self_s->buffer_s.bchn_lmin1;
 
             /*
              * Line lenght is:
@@ -657,15 +661,15 @@ GPLGenC(int argc, char *arg_gap[])
         tmp_s.pmap_gp[tmp_s.pmapl - 1] = '\0';
 
         /* Save the cpal lenght. */
-        self->buffer_s.cpall = (
-            self->buffer_s.headerl + tmp_s.pmapl - 1
+        self_s->buffer_s.cpall = (
+            self_s->buffer_s.headerl + tmp_s.pmapl - 1
         );
 
         /* Declare and add dynamic memory to the cpal string. */
         char *cpal_gp = (
-            malloc(sizeof(char) * self->buffer_s.cpall)
+            malloc(sizeof(char) * self_s->buffer_s.cpall)
         );
-        memset(cpal_gp, '\0', sizeof(char) * self->buffer_s.cpall);
+        memset(cpal_gp, '\0', sizeof(char) * self_s->buffer_s.cpall);
 
         /* Merge the palette string to the header string. */
         strcat(cpal_gp, tmp_s.header_gp);
@@ -676,32 +680,32 @@ GPLGenC(int argc, char *arg_gap[])
          * 0 == '\0' == NULL
          */
         memset(
-            self->data_s.colour_s.depth_a,
+            self_s->data_s.colour_s.depth_a,
             0,
-            self->data_s.colour_s.depthl
+            self_s->data_s.colour_s.depthl
         );
         memset(
-            self->data_s.colour_s.type_gp,
+            self_s->data_s.colour_s.type_gp,
             '\0',
-            self->data_s.colour_s.typel
+            self_s->data_s.colour_s.typel
         );
         memset(
             tmp_s.header_gp,
             '\0',
-            self->buffer_s.headerl
+            self_s->buffer_s.headerl
         );
         memset(
             tmp_s.pmap_gp,
             '\0',
             tmp_s.pmapl
         );
-        self->data_s.colour_s.depthl = 0;
-        self->data_s.colour_s.typel = 0;
-        self->buffer_s.headerl = 0;
-        free(self->data_s.colour_s.type_gp);
+        self_s->data_s.colour_s.depthl = 0;
+        self_s->data_s.colour_s.typel = 0;
+        self_s->buffer_s.headerl = 0;
+        free(self_s->data_s.colour_s.type_gp);
         free(tmp_s.header_gp);
         free(tmp_s.pmap_gp);
-        self->data_s.colour_s.type_gp = NULL;
+        self_s->data_s.colour_s.type_gp = NULL;
 
         /*
          * Clear all unused data.
@@ -714,7 +718,7 @@ GPLGenC(int argc, char *arg_gap[])
     }
 
     void
-    finput_f(struct GPLGenC *self, FILE *input_lp) {
+    finput_f(struct Self *self_s, FILE *input_lp) {
         struct {
             char character;
             unsigned char keyl: 3;
@@ -830,29 +834,29 @@ GPLGenC(int argc, char *arg_gap[])
                     if (! buffer_s.ignore) {
 
                         if (strcmp(buffer_s.key_g, "type") == 0) {
-                            strcpy(self->input_s.type_g, buffer_s.value_g);
-                            //self->input_s.typel = buffer_s.valuel;
-                            self->input_s.typel = strlen(buffer_s.value_g) + 1;
+                            strcpy(self_s->input_s.type_g, buffer_s.value_g);
+                            //self_s->input_s.typel = buffer_s.valuel;
+                            self_s->input_s.typel = strlen(buffer_s.value_g) + 1;
                         } else if (strcmp(buffer_s.key_g, "depth") == 0) {
-                            strcpy(self->input_s.depth_g, buffer_s.value_g);
-                            //self->input_s.depthl = buffer_s.valuel;
-                            self->input_s.depthl = strlen(buffer_s.value_g) + 1;
+                            strcpy(self_s->input_s.depth_g, buffer_s.value_g);
+                            //self_s->input_s.depthl = buffer_s.valuel;
+                            self_s->input_s.depthl = strlen(buffer_s.value_g) + 1;
                         } else if (strcmp(buffer_s.key_g, "columns") == 0) {
-                            strcpy(self->input_s.columns_g, buffer_s.value_g);
-                            //self->input_s.columnsl = buffer_s.valuel;
-                            self->input_s.columnsl = strlen(buffer_s.value_g) + 1;
+                            strcpy(self_s->input_s.columns_g, buffer_s.value_g);
+                            //self_s->input_s.columnsl = buffer_s.valuel;
+                            self_s->input_s.columnsl = strlen(buffer_s.value_g) + 1;
                         } else if (strcmp(buffer_s.key_g, "title") == 0) {
-                            strcpy(self->input_s.title_g, buffer_s.value_g);
-                            //self->input_s.titlel = buffer_s.valuel;
-                            self->input_s.titlel = strlen(buffer_s.value_g) + 1;
+                            strcpy(self_s->input_s.title_g, buffer_s.value_g);
+                            //self_s->input_s.titlel = buffer_s.valuel;
+                            self_s->input_s.titlel = strlen(buffer_s.value_g) + 1;
                         } else if (strcmp(buffer_s.key_g, "author") == 0) {
-                            strcpy(self->input_s.author_g, buffer_s.value_g);
-                            //self->input_s.authorl = buffer_s.valuel;
-                            self->input_s.authorl = strlen(buffer_s.value_g) + 1;
+                            strcpy(self_s->input_s.author_g, buffer_s.value_g);
+                            //self_s->input_s.authorl = buffer_s.valuel;
+                            self_s->input_s.authorl = strlen(buffer_s.value_g) + 1;
                         } else if (strcmp(buffer_s.key_g, "years") == 0) {
-                            strcpy(self->input_s.years_g, buffer_s.value_g);
-                            //self->input_s.yearsl = buffer_s.valuel;
-                            self->input_s.yearsl = strlen(buffer_s.value_g) + 1;
+                            strcpy(self_s->input_s.years_g, buffer_s.value_g);
+                            //self_s->input_s.yearsl = buffer_s.valuel;
+                            self_s->input_s.yearsl = strlen(buffer_s.value_g) + 1;
                         }
 
                         memset(
@@ -886,7 +890,7 @@ GPLGenC(int argc, char *arg_gap[])
     }
 
     void
-    run_f(struct GPLGenC *self, int argc, char *arg_gap[]) {
+    run_f(struct Self *self_s, int argc, char *arg_gap[]) {
         /* Default values. */
         struct {
             unsigned char typel: 3;
@@ -940,69 +944,69 @@ GPLGenC(int argc, char *arg_gap[])
         sprintf(tmp_s.years_g, "%hu", tmp_s.tm_sp->tm_year + 1900);
 
         /* Add dynamic memories to a new structure. */
-        self->data_s.colour_s.type_gp = (
+        self_s->data_s.colour_s.type_gp = (
             malloc(sizeof(char) * tmp_s.typel)
         );
-        self->data_s.pmap_s.title_gp = (
+        self_s->data_s.pmap_s.title_gp = (
             malloc(sizeof(char) * tmp_s.titlel)
         );
-        self->data_s.copyright_s.author_gp = (
+        self_s->data_s.copyright_s.author_gp = (
             malloc(sizeof(char) * tmp_s.authorl)
         );
-        self->data_s.copyright_s.years_gp = (
+        self_s->data_s.copyright_s.years_gp = (
             malloc(sizeof(char) * tmp_s.yearsl)
         );
-        self->error_s.value_gp = (
+        self_s->error_s.value_gp = (
             malloc(sizeof(char) * tmp_s.valuel)
         );
         memset(
-            self->data_s.colour_s.type_gp,
+            self_s->data_s.colour_s.type_gp,
             '\0',
             sizeof(char) * tmp_s.typel
         );
         memset(
-            self->data_s.pmap_s.title_gp,
+            self_s->data_s.pmap_s.title_gp,
             '\0',
             sizeof(char) * tmp_s.titlel
         );
         memset(
-            self->data_s.copyright_s.author_gp,
+            self_s->data_s.copyright_s.author_gp,
             '\0',
             sizeof(char) * tmp_s.authorl
         );
         memset(
-            self->data_s.copyright_s.years_gp,
+            self_s->data_s.copyright_s.years_gp,
             '\0',
             sizeof(char) * tmp_s.yearsl
         );
         memset(
-            self->error_s.value_gp,
+            self_s->error_s.value_gp,
             '\0',
             sizeof(char) * tmp_s.valuel
         );
 
         /* Add default values to a new structure. */
-        self->data_s.colour_s.typel = tmp_s.typel;
-        strcpy(self->data_s.colour_s.type_gp, tmp_s.type_g);
-        self->data_s.colour_s.depthl = tmp_s.depthl;
-        memcpy(self->data_s.colour_s.depth_a, tmp_s.depth_a, tmp_s.depthl);
-        self->data_s.pmap_s.titlel = tmp_s.titlel;
-        strcpy(self->data_s.pmap_s.title_gp, tmp_s.title_g);
-        self->data_s.pmap_s.columns = tmp_s.columns;
-        self->data_s.copyright_s.authorl = tmp_s.authorl;
-        strcpy(self->data_s.copyright_s.author_gp, tmp_s.author_g);
-        self->data_s.copyright_s.yearsl = tmp_s.yearsl;
-        strcpy(self->data_s.copyright_s.years_gp, tmp_s.years_g);
-        self->error_s.code = tmp_s.code;
-        self->error_s.valuel = tmp_s.valuel;
-        strcpy(self->error_s.value_gp, tmp_s.value_g);
+        self_s->data_s.colour_s.typel = tmp_s.typel;
+        strcpy(self_s->data_s.colour_s.type_gp, tmp_s.type_g);
+        self_s->data_s.colour_s.depthl = tmp_s.depthl;
+        memcpy(self_s->data_s.colour_s.depth_a, tmp_s.depth_a, tmp_s.depthl);
+        self_s->data_s.pmap_s.titlel = tmp_s.titlel;
+        strcpy(self_s->data_s.pmap_s.title_gp, tmp_s.title_g);
+        self_s->data_s.pmap_s.columns = tmp_s.columns;
+        self_s->data_s.copyright_s.authorl = tmp_s.authorl;
+        strcpy(self_s->data_s.copyright_s.author_gp, tmp_s.author_g);
+        self_s->data_s.copyright_s.yearsl = tmp_s.yearsl;
+        strcpy(self_s->data_s.copyright_s.years_gp, tmp_s.years_g);
+        self_s->error_s.code = tmp_s.code;
+        self_s->error_s.valuel = tmp_s.valuel;
+        strcpy(self_s->error_s.value_gp, tmp_s.value_g);
 
         /* Add all functions to a new structure. */
-        self->bchn_lgen_mp = &bchn_lgen_f;
-        self->header_lgen_mp = &header_lgen_f;
-        self->cpal_lgen_mp = &cpal_lgen_f;
-        self->finput_mp = &finput_f;
-        self->run_mp = &run_f;
+        self_s->bchn_lgen_mp = &bchn_lgen_f;
+        self_s->header_lgen_mp = &header_lgen_f;
+        self_s->cpal_lgen_mp = &cpal_lgen_f;
+        self_s->finput_mp = &finput_f;
+        self_s->run_mp = &run_f;
 
         /* This file is in arg_gap[0]. */
 
@@ -1013,13 +1017,13 @@ GPLGenC(int argc, char *arg_gap[])
             tmp_s.file_lp = fopen(tmp_s.input_gp, "r");
 
             if (tmp_s.file_lp) {
-                self->finput_mp(self, tmp_s.file_lp);
-                tmp_s.config_sp = &self->input_s;
+                self_s->finput_mp(self_s, tmp_s.file_lp);
+                tmp_s.config_sp = &self_s->input_s;
                 fclose(tmp_s.file_lp);
             } else {
-                self->error_s.code = errno;
-                self->error_s.valuel = strlen(tmp_s.input_gp) + 1;
-                self->error_s.value_gp = tmp_s.input_gp;
+                self_s->error_s.code = errno;
+                self_s->error_s.valuel = strlen(tmp_s.input_gp) + 1;
+                self_s->error_s.value_gp = tmp_s.input_gp;
             }
             tmp_s.file_lp = NULL;
         }
@@ -1028,21 +1032,21 @@ GPLGenC(int argc, char *arg_gap[])
         if (tmp_s.config_sp) {
             if (tmp_s.config_sp->type_g) {
                 memset(
-                    self->data_s.colour_s.type_gp,
+                    self_s->data_s.colour_s.type_gp,
                     '\0',
-                    sizeof(char) * self->data_s.colour_s.typel
+                    sizeof(char) * self_s->data_s.colour_s.typel
                 );
-                self->data_s.colour_s.typel = tmp_s.config_sp->typel;
+                self_s->data_s.colour_s.typel = tmp_s.config_sp->typel;
 
-                self->data_s.colour_s.type_gp = (
+                self_s->data_s.colour_s.type_gp = (
                     realloc(
-                        self->data_s.colour_s.type_gp,
-                        sizeof(char) * self->data_s.colour_s.typel
+                        self_s->data_s.colour_s.type_gp,
+                        sizeof(char) * self_s->data_s.colour_s.typel
                     )
                 );
 
                 strcpy(
-                    self->data_s.colour_s.type_gp,
+                    self_s->data_s.colour_s.type_gp,
                     tmp_s.config_sp->type_g
                 );
 
@@ -1063,7 +1067,7 @@ GPLGenC(int argc, char *arg_gap[])
                     1
                 };
                 depth_s.data_ap[depth_s.lenght - 1] = (
-                    self->data_s.colour_s.depth_a[depth_s.lenght - 1]
+                    self_s->data_s.colour_s.depth_a[depth_s.lenght - 1]
                 );
 
                 for (unsigned char index = 0;
@@ -1091,7 +1095,7 @@ GPLGenC(int argc, char *arg_gap[])
                                 )
                             );
                             depth_s.data_ap[depth_s.lenght] = (
-                                self->data_s.colour_s.depth_a[depth_s.lenght]
+                                self_s->data_s.colour_s.depth_a[depth_s.lenght]
                             );
                         }
                     }
@@ -1102,7 +1106,7 @@ GPLGenC(int argc, char *arg_gap[])
                     }
                 }
 
-                memcpy(self->data_s.colour_s.depth_a, depth_s.data_ap, depth_s.lenght);
+                memcpy(self_s->data_s.colour_s.depth_a, depth_s.data_ap, depth_s.lenght);
 
                 memset(depth_s.data_ap, 0, sizeof(char) * depth_s.lenght);
                 free(depth_s.data_ap);
@@ -1118,21 +1122,21 @@ GPLGenC(int argc, char *arg_gap[])
 
             if (tmp_s.config_sp->title_g) {
                 memset(
-                    self->data_s.pmap_s.title_gp,
+                    self_s->data_s.pmap_s.title_gp,
                     '\0',
-                    sizeof(char) * self->data_s.pmap_s.titlel
+                    sizeof(char) * self_s->data_s.pmap_s.titlel
                 );
-                self->data_s.pmap_s.titlel = tmp_s.config_sp->titlel;
+                self_s->data_s.pmap_s.titlel = tmp_s.config_sp->titlel;
 
-                self->data_s.pmap_s.title_gp = (
+                self_s->data_s.pmap_s.title_gp = (
                     realloc(
-                        self->data_s.pmap_s.title_gp,
-                        sizeof(char) * self->data_s.pmap_s.titlel
+                        self_s->data_s.pmap_s.title_gp,
+                        sizeof(char) * self_s->data_s.pmap_s.titlel
                     )
                 );
 
                 strcpy(
-                    self->data_s.pmap_s.title_gp,
+                    self_s->data_s.pmap_s.title_gp,
                     tmp_s.config_sp->title_g
                 );
 
@@ -1155,7 +1159,7 @@ GPLGenC(int argc, char *arg_gap[])
 
                 if (tmp_s.isdigit
                       && strtoul(tmp_s.config_sp->columns_g, NULL, 10) >= 0)
-                    self->data_s.pmap_s.columns = (
+                    self_s->data_s.pmap_s.columns = (
                         strtoul(tmp_s.config_sp->columns_g, NULL, 10)
                     );
 
@@ -1170,21 +1174,21 @@ GPLGenC(int argc, char *arg_gap[])
 
             if (tmp_s.config_sp->author_g) {
                 memset(
-                    self->data_s.copyright_s.author_gp,
+                    self_s->data_s.copyright_s.author_gp,
                     '\0',
-                    sizeof(char) * self->data_s.copyright_s.authorl
+                    sizeof(char) * self_s->data_s.copyright_s.authorl
                 );
-                self->data_s.copyright_s.authorl = tmp_s.config_sp->authorl;
+                self_s->data_s.copyright_s.authorl = tmp_s.config_sp->authorl;
 
-                self->data_s.copyright_s.author_gp = (
+                self_s->data_s.copyright_s.author_gp = (
                     realloc(
-                        self->data_s.copyright_s.author_gp,
-                        sizeof(char) * self->data_s.copyright_s.authorl
+                        self_s->data_s.copyright_s.author_gp,
+                        sizeof(char) * self_s->data_s.copyright_s.authorl
                     )
                 );
 
                 strcpy(
-                    self->data_s.copyright_s.author_gp,
+                    self_s->data_s.copyright_s.author_gp,
                     tmp_s.config_sp->author_g
                 );
 
@@ -1211,41 +1215,41 @@ GPLGenC(int argc, char *arg_gap[])
                         < strtoul(tmp_s.years_g, NULL, 10)
                       || ! tmp_s.isdigit) {
                     memset(
-                        self->data_s.copyright_s.years_gp,
+                        self_s->data_s.copyright_s.years_gp,
                         '\0',
-                        sizeof(char) * self->data_s.copyright_s.yearsl
+                        sizeof(char) * self_s->data_s.copyright_s.yearsl
                     );
-                    self->data_s.copyright_s.yearsl = tmp_s.config_sp->yearsl;
+                    self_s->data_s.copyright_s.yearsl = tmp_s.config_sp->yearsl;
 
-                    self->data_s.copyright_s.years_gp = (
+                    self_s->data_s.copyright_s.years_gp = (
                         realloc(
-                            self->data_s.copyright_s.years_gp,
-                            sizeof(char) * self->data_s.copyright_s.yearsl
+                            self_s->data_s.copyright_s.years_gp,
+                            sizeof(char) * self_s->data_s.copyright_s.yearsl
                         )
                     );
 
                     strcpy(
-                        self->data_s.copyright_s.years_gp,
+                        self_s->data_s.copyright_s.years_gp,
                         tmp_s.config_sp->years_g
                     );
                 } else if (tmp_s.isdigit);
                 else {
                     memset(
-                        self->data_s.copyright_s.years_gp,
+                        self_s->data_s.copyright_s.years_gp,
                         '\0',
-                        sizeof(char) * self->data_s.copyright_s.yearsl
+                        sizeof(char) * self_s->data_s.copyright_s.yearsl
                     );
-                    self->data_s.copyright_s.yearsl = tmp_s.config_sp->yearsl;
+                    self_s->data_s.copyright_s.yearsl = tmp_s.config_sp->yearsl;
 
-                    self->data_s.copyright_s.years_gp = (
+                    self_s->data_s.copyright_s.years_gp = (
                         realloc(
-                            self->data_s.copyright_s.years_gp,
-                            sizeof(char) * self->data_s.copyright_s.yearsl
+                            self_s->data_s.copyright_s.years_gp,
+                            sizeof(char) * self_s->data_s.copyright_s.yearsl
                         )
                     );
 
                     strcpy(
-                        self->data_s.copyright_s.years_gp,
+                        self_s->data_s.copyright_s.years_gp,
                         tmp_s.config_sp->years_g
                     );
                 }
@@ -1260,7 +1264,7 @@ GPLGenC(int argc, char *arg_gap[])
             }
         }
 
-        tmp_s.cpal_gp = self->cpal_lgen_mp(self);
+        tmp_s.cpal_gp = self_s->cpal_lgen_mp(self);
         if (argc > 2)
             tmp_s.output_gp = arg_gap[2];
 
@@ -1270,14 +1274,14 @@ GPLGenC(int argc, char *arg_gap[])
                 fwrite(
                     tmp_s.cpal_gp,
                     sizeof(char),
-                    self->buffer_s.cpall,
+                    self_s->buffer_s.cpall,
                     tmp_s.file_lp
                 );
                 fclose(tmp_s.file_lp);
             } else {
-                self->error_s.code = errno;
-                self->error_s.valuel = strlen(tmp_s.output_gp) + 1;
-                self->error_s.value_gp = tmp_s.output_gp;
+                self_s->error_s.code = errno;
+                self_s->error_s.valuel = strlen(tmp_s.output_gp) + 1;
+                self_s->error_s.value_gp = tmp_s.output_gp;
                 printf("%s\n", tmp_s.cpal_gp);
             }
             tmp_s.file_lp = NULL;
@@ -1286,15 +1290,15 @@ GPLGenC(int argc, char *arg_gap[])
         }
         tmp_s.output_gp = NULL;
 
-        if (self->error_s.code) {
+        if (self_s->error_s.code) {
             struct {
                 char code;
                 unsigned char valuel;
                 char *value_gp;
             } error_s = {
-                self->error_s.code,
-                self->error_s.valuel,
-                self->error_s.value_gp
+                self_s->error_s.code,
+                self_s->error_s.valuel,
+                self_s->error_s.value_gp
             };
 
             /*
@@ -1314,19 +1318,19 @@ GPLGenC(int argc, char *arg_gap[])
              * 0 == '\0' == NULL
              */
             memset(
-                self->error_s.value_gp,
+                self_s->error_s.value_gp,
                 '\0',
-                sizeof(char) * self->error_s.valuel
+                sizeof(char) * self_s->error_s.valuel
             );
             memset(
                 error_s.value_gp,
                 '\0',
                 sizeof(char) * tmp_s.valuel
             );
-            self->error_s.code = 0;
-            self->error_s.valuel = 0;
-            free(self->error_s.value_gp);
-            self->error_s.value_gp = NULL;
+            self_s->error_s.code = 0;
+            self_s->error_s.valuel = 0;
+            free(self_s->error_s.value_gp);
+            self_s->error_s.value_gp = NULL;
 
             /*
              * Clear all unused error data.
@@ -1352,9 +1356,9 @@ GPLGenC(int argc, char *arg_gap[])
         memset(
             tmp_s.cpal_gp,
             '\0',
-            sizeof(char) * self->buffer_s.cpall
+            sizeof(char) * self_s->buffer_s.cpall
         );
-        self->buffer_s.cpall = 0;
+        self_s->buffer_s.cpall = 0;
         free(tmp_s.cpal_gp);
 
         /*
@@ -1368,16 +1372,16 @@ GPLGenC(int argc, char *arg_gap[])
      * This variable definition is required
      * to generate a new structure (class).
      */
-    struct GPLGenC structure;
+    static struct Self self_s;
 
     /*
      * Run this structure function
      * to emulate the class constructor method.
      */
-    run_f(&structure, argc, arg_gap);
+    run_f(&self_s, argc, arg_gap);
 
     /* Return to a new structure as class object. */
-    return structure;
+    return &self_s;
 }
 
 
