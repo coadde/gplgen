@@ -34,11 +34,12 @@ class GPLGenC:
         'copyright_d': {
             'author': 'anonymous',
             'years': str(datetime.now().year)
-        },
-        'error_d': {
-            'code': 0,
-            'value': 'none'
         }
+    }
+
+    __error_d = {
+        'code': 0,
+        'value': 'none'
     }
 
     def __bchn_lgen_m(self, byte: int = 8) -> tuple:
@@ -50,7 +51,8 @@ class GPLGenC:
         elif type(byte) is (str or float or complex):
             byte = int(byte)
 
-        size = 2**byte - 1
+        quantity = 2**byte - 1
+        max = 2**8 - 1
 
         # Round half away from zero division for integer calcutation:
         # https://www.calculator.net/rounding-calculator.html
@@ -103,17 +105,18 @@ class GPLGenC:
         # (x + x%y) // y == k(round)
         # ---
         #
-        # Integers calcutation:  (x + x%y) // y)
+        # Integer calcutation:  (x + x%y) // y)
         channel_l = []
-        for index in range(size + 1):
+        for index in range(quantity + 1):
             # Float calcutation:  round(x / y)
-            # channel_l.append(round(index * 255 / size))
+            # channel_l.append(round(index * max / quantity))
 
-            # Integers calcutation:  (x + x%y) // y)
-            channel_l.append((index*255 + index*255%size) // size)
+            # Integer calcutation:  (x + x%y) // y)
+            channel_l.append((index*max + index*max%quantity) // quantity)
 
         del index
-        del size
+        del max
+        del quantity
 
         return tuple(channel_l)
 
@@ -219,7 +222,17 @@ class GPLGenC:
 
         return self.__header_lgen_m() + palette_map
 
-    def run_m(self, input: str = None, output: str = None) -> None:
+    def run_m(self, args: list = []) -> None:
+        # This script is in args[0]
+        input = None
+        output = None
+
+        if len(args) > 1:
+            input = args[1]
+
+        if len(args) > 2:
+            output = args[2]
+
         config_d = None
         if input:
             config_s = set()
@@ -234,11 +247,11 @@ class GPLGenC:
 
                 del file
             except FileNotFoundError:
-                self.__data_d['error_d']['code'] = 2
-                self.__data_d['error_d']['value'] = input
+                self.__error_d['code'] = 2
+                self.__error_d['value'] = input
             except PermissionError:
-                self.__data_d['error_d']['code'] = 13
-                self.__data_d['error_d']['value'] = input
+                self.__error_d['code'] = 13
+                self.__error_d['value'] = input
 
             config_d = dict(config_s)
             del config_s
@@ -294,16 +307,16 @@ class GPLGenC:
 
                 del file
             except PermissionError:
-                self.__data_d['error_d']['code'] = 13
-                self.__data_d['error_d']['value'] = output
+                self.__error_d['code'] = 13
+                self.__error_d['value'] = output
                 print (self.__cpal_lgen_m())
 
         else:
             print (self.__cpal_lgen_m())
 
-        if self.__data_d['error_d']['code'] != 0:
-            code = self.__data_d['error_d']['code']
-            value = self.__data_d['error_d']['value']
+        if self.__error_d['code'] != 0:
+            code = self.__error_d['code']
+            value = self.__error_d['value']
 
             if code == 2:
                 name = 'FileNotFoundError';
@@ -321,19 +334,9 @@ class GPLGenC:
                 file=stderr
             )
 
-    def __init__(self, input: str = None, output: str = None) -> None:
+    def __init__(self, args: list = []) -> None:
 
-        self.run_m(input, output)
+        self.run_m(args)
 
 
-arg = [None, None]
-
-# This file is in argv[0]
-
-if len(argv) > 1:
-    arg[0] = argv[1]
-
-if len(argv) > 2:
-    arg[1] = argv[2]
-
-GPLGenC(arg[0], arg[1])
+GPLGenC(argv)
