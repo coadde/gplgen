@@ -21,6 +21,7 @@ from datetime import datetime
 from sys import argv
 from sys import stderr
 
+
 class GPLGenC:
     __data_d = {
         'colour_d': {

@@ -44,6 +44,7 @@ enum {
  * to generate a new structure (class).
  */
 
+
 /* This structure emulate a class interface. */
 struct GPLGenC {
     struct {

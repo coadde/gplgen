@@ -23,6 +23,7 @@
 
 define('YEAR', date("Y"));
 
+
 class GPLGenC {
     private $data_a = [
         'colour_a' => [
