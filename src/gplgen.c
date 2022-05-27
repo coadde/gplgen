@@ -41,10 +41,16 @@ enum {
 
 
 /*
- * This function with structure (map) as return
+ * This function with structure (map) as return,
  * emulate a class with constructor.
  */
 struct Self {
+    /*
+     * All structures (maps) and function pointers (methods)
+     * are defined inside of this structure definition,
+     * to allow use only on a new declared structure (class).
+     */
+
     struct {
         unsigned char bchn_lmin1;
         unsigned short headerl: 11;
@@ -102,8 +108,8 @@ struct Self {
 } *GPLGenC(int argc, char *arg_gap[])
 {
     /*
-     * All functions are created inside of this function,
-     * to allow use only on a new structure (class).
+     * All functions (methods) are declared inside of this function,
+     * to allow use only on a new declared structure (class).
      */
 
     unsigned char *
