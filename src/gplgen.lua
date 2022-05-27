@@ -27,7 +27,9 @@
 -- This table (map) with "new" function is required
 -- to generate a new metatable (class).
 GPLGenC = {}
-function GPLGenC:new_f(input, output)
+
+
+function GPLGenC:new_f(args)
     -- All tables (maps) and functions from this table (map),
     -- are created inside of this function,
     -- to allow use only on a new metatable (class)
@@ -45,11 +47,12 @@ function GPLGenC:new_f(input, output)
         copyright_t = {
             author = 'anonymous',
             years = tostring(os.date('%Y'))
-        },
-        error_t = {
-            code = 0,
-            value = 'none'
         }
+    }
+
+    self.error_t = {
+        code = 0,
+        value = 'none'
     }
 
     function self:bchn_lgen_m(byte)
@@ -62,7 +65,8 @@ function GPLGenC:new_f(input, output)
             byte = math.floor(byte)
         end
 
-        local size = 2^byte - 1
+        local quantity = 2^byte - 1
+        local max = 2^8 - 1
 
         -- Round half away from zero division for integer calcutation:
         -- https://www.calculator.net/rounding-calculator.html
@@ -115,16 +119,16 @@ function GPLGenC:new_f(input, output)
         -- (x + x%y) // y == k(round)
         -- ---
         --
-        -- Integers calcutation:  math.floor((x + x%y) / y)
+        -- Integer calcutation:  math.floor((x + x%y) / y)
         local channel_t = {}
-        for index = 0, size, 1 do
-            -- Integers calcutation:  math.floor((x + x%y) / y)
+        for index = 0, quantity, 1 do
+            -- Integer calcutation:  math.floor((x + x%y) / y)
             table.insert(
                 channel_t,
-                math.floor((index*255 + index*255%size) / size)
+                math.floor((index*max + index*max%quantity) / quantity)
             )
         end
-        index, size = nil, nil
+        index, max, quantity = nil, nil, nil
 
         return channel_t
     end
@@ -239,7 +243,11 @@ function GPLGenC:new_f(input, output)
         return self:header_lgen_m() .. palette_map
     end
 
-    function self:run_m(input, output)
+    function self:run_m(args)
+        -- This script is in args[0]
+        local input = args[1]
+        local output = args[2]
+
         local config_t = {}
         if input then
             local pcall_t = {
@@ -260,8 +268,8 @@ function GPLGenC:new_f(input, output)
                 file:close()
                 file = nil
             else
-                self.data_t['error_t']['code'] = pcall_t[4]
-                self.data_t['error_t']['value'] = pcall_t[3]
+                self.error_t['code'] = pcall_t[4]
+                self.error_t['value'] = pcall_t[3]
             end
             pcall_t = nil
         end
@@ -331,8 +339,8 @@ function GPLGenC:new_f(input, output)
                 file:close()
                 file = nil
             else
-                self.data_t['error_t']['code'] = pcall_t[4]
-                self.data_t['error_t']['value'] = pcall_t[3]
+                self.error_t['code'] = pcall_t[4]
+                self.error_t['value'] = pcall_t[3]
                 print(self:cpal_lgen_m())
             end
             pcall_t = nil
@@ -340,9 +348,9 @@ function GPLGenC:new_f(input, output)
             print(self:cpal_lgen_m())
         end
 
-        if self.data_t['error_t']['code'] ~= 0 then
-            local code = self.data_t['error_t']['code']
-            local value = self.data_t['error_t']['value']
+        if self.error_t['code'] ~= 0 then
+            local code = self.error_t['code']
+            local value = self.error_t['value']
 
             io.stderr:write(
                 value .. ' [Errno ' .. tostring(code) .. ']' .. '\n'
@@ -361,11 +369,11 @@ function GPLGenC:new_f(input, output)
 
     -- Run this metatable function
     -- to emulate the class constructor method.
-    self:run_m(input, output)
+    self:run_m(args)
 
     -- Return to a new metatable as class object.
     return metatable
 end
 
 
-GPLGenC:new_f(arg[1], arg[2])
+GPLGenC:new_f(arg)
