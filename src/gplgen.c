@@ -43,74 +43,73 @@ enum {
 /*
  * This function with structure (map) as return,
  * emulate a class with constructor.
+ * All functions (methods) are declared inside of this function,
+ * to allow use only on a new declared structure (class).
  */
-struct Self {
+struct GPLGenC *
+GPLGenC(int argc, char *arg_gap[])
+{
     /*
      * All structures (maps) and function pointers (methods)
      * are defined inside of this structure definition,
      * to allow use only on a new declared structure (class).
      */
-
-    struct {
-        unsigned char bchn_lmin1;
-        unsigned short headerl: 11;
-        unsigned long long cpall: 33;
-    } buffer_s;
-
-    struct {
+    struct Self {
         struct {
+            unsigned char bchn_lmin1;
+            unsigned short headerl: 11;
+            unsigned long long cpall: 33;
+        } buffer_s;
+
+        struct {
+            struct {
+                unsigned char typel;
+                char *type_gp;
+                unsigned char depthl: 2;
+                unsigned char depth_a[3];
+            } colour_s;
+
+            struct {
+                unsigned char titlel;
+                char *title_gp;
+                unsigned char columns;
+            } pmap_s;
+
+            struct {
+                unsigned char authorl;
+                char *author_gp;
+                unsigned char yearsl;
+                char *years_gp;
+            } copyright_s;
+        } data_s;
+
+        struct {
+            int code: 5;
+            unsigned char valuel;
+            char *value_gp;
+        } error_s;
+
+        struct Input {
             unsigned char typel;
-            char *type_gp;
-            unsigned char depthl: 2;
-            unsigned char depth_a[3];
-        } colour_s;
-
-        struct {
+            char type_g[1 << 8];
+            unsigned char depthl;
+            char depth_g[1 << 8];
             unsigned char titlel;
-            char *title_gp;
-            unsigned char columns;
-        } pmap_s;
-
-        struct {
+            char title_g[1 << 8];
+            unsigned char columnsl;
+            char columns_g[1 << 8];
             unsigned char authorl;
-            char *author_gp;
+            char author_g[1 << 8];
             unsigned char yearsl;
-            char *years_gp;
-        } copyright_s;
-   } data_s;
+            char years_g[1 << 8];
+        } input_s;
 
-   struct {
-       int code: 5;
-       unsigned char valuel;
-       char *value_gp;
-   } error_s;
-
-   struct Input {
-       unsigned char typel;
-       char type_g[1 << 8];
-       unsigned char depthl;
-       char depth_g[1 << 8];
-       unsigned char titlel;
-       char title_g[1 << 8];
-       unsigned char columnsl;
-       char columns_g[1 << 8];
-       unsigned char authorl;
-       char author_g[1 << 8];
-       unsigned char yearsl;
-       char years_g[1 << 8];
-   } input_s;
-
-   unsigned char *(*bchn_lgen_mp)(struct Self *, unsigned char);
-   char *(*header_lgen_mp)(struct Self *);
-   char *(*cpal_lgen_mp)(struct Self *);
-   void (*finput_mp)(struct Self *, FILE *);
-   void (*run_mp)(struct Self *, int, char *[]);
-} *GPLGenC(int argc, char *arg_gap[])
-{
-    /*
-     * All functions (methods) are declared inside of this function,
-     * to allow use only on a new declared structure (class).
-     */
+        unsigned char *(*bchn_lgen_mp)(struct Self *, unsigned char);
+        char *(*header_lgen_mp)(struct Self *);
+        char *(*cpal_lgen_mp)(struct Self *);
+        void (*finput_mp)(struct Self *, FILE *);
+        void (*run_mp)(struct Self *, int, char *[]);
+    };
 
     unsigned char *
     bchn_lgen_f(struct Self *self_sp, unsigned char byte) {
@@ -1381,7 +1380,7 @@ struct Self {
     run_f(&self_s, argc, arg_gap);
 
     /* Return to a new structure as class object. */
-    return &self_s;
+    return (struct GPLGenC *)&self_s;
 }
 
 
